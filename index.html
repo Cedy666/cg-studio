@@ -12,9 +12,9 @@
   --bg:      #0b0b0b;
   --surface: #0e0e0e;
   --text:    #EDECEA;
-  --muted:   #A4A3A0;
-  --dim:     #5a5a5a;
-  --faint:   #1c1c1c;
+  --muted:   #B8B7B4;
+  --dim:     #787876;
+  --faint:   #383836;
   --line:    #171717;
   --accent:  #002FA7;
   --glow:    rgba(0,47,167,.1);
@@ -237,6 +237,16 @@ h2 {
   grid-template-columns: 120px 1fr;
   gap: 3.5rem;
 }
+.about-photo {
+  width: 100%;
+  max-width: 220px;
+  aspect-ratio: 3/4;
+  object-fit: cover;
+  object-position: center top;
+  filter: grayscale(15%);
+  margin-bottom: 2rem;
+  display: block;
+}
 .about p {
   max-width: 640px;
   color: var(--muted);
@@ -287,12 +297,12 @@ h2 {
   opacity: .7;
   margin-bottom: .7rem;
 }
-.ip h3 { font-weight:400; font-size:1rem; margin-bottom:.5rem; }
-.ip p { color:var(--muted); font-size:.88rem; margin-bottom:.9rem; line-height:1.7; }
+.ip h3 { font-weight:400; font-size:1.1rem; margin-bottom:.5rem; }
+.ip p { color:var(--muted); font-size:.98rem; margin-bottom:.9rem; line-height:1.75; }
 .ip-meta {
   font-family: var(--mono);
-  font-size: .5rem;
-  color: var(--faint);
+  font-size: .58rem;
+  color: var(--dim);
   letter-spacing: .12em;
   display: flex;
   justify-content: space-between;
@@ -337,17 +347,21 @@ h2 {
   letter-spacing: .1em;
   margin-bottom: 1rem;
 }
-.card h3 { font-weight:400; font-size:1.05rem; margin-bottom:.35rem; }
+.card h3 { font-weight:400; font-size:1.15rem; margin-bottom:.35rem; }
 .card .c-type {
   font-family: var(--mono);
-  font-size: .54rem;
+  font-size: .6rem;
   letter-spacing: .14em;
   text-transform: uppercase;
   color: var(--accent);
   margin-bottom: .5rem;
 }
-.card p { color:var(--muted); font-size:.85rem; transition:color .4s; }
+.card p { color:var(--muted); font-size:.95rem; line-height:1.75; transition:color .4s; }
 .card:hover p { color: var(--text); }
+.card-awards { margin-top:1.1rem; display:flex; flex-direction:column; gap:.4rem; }
+.card-awards span { font-family:var(--mono); font-size:.54rem; color:var(--dim); letter-spacing:.06em; line-height:1.6; }
+.card-link { display:inline-block; margin-top:1.2rem; font-family:var(--mono); font-size:.58rem; letter-spacing:.12em; text-transform:uppercase; color:var(--dim); border-bottom:1px solid var(--dim); padding-bottom:2px; transition:color .3s, border-color .3s; }
+.card:hover .card-link { color:var(--accent); border-color:var(--accent); }
 
 /* ── CONTACT ───────────────────────────────────────── */
 .contact {
@@ -360,7 +374,7 @@ h2 {
 .contact-links { display:flex; flex-direction:column; gap:.7rem; margin-top:1rem; }
 .contact-links a {
   color: var(--muted);
-  font-size: .9rem;
+  font-size: 1rem;
   transition: color .35s;
   position: relative;
   display: inline-block;
@@ -444,7 +458,9 @@ h2 {
 <section id="about">
   <h2>About <span class="h2m">DOC.PROFILE / v2.1</span></h2>
   <div class="about-grid">
-    <div></div>
+    <div>
+      <img src="cedric.JPG" alt="Cédric Godin" class="about-photo" />
+    </div>
     <div class="about">
       <p class="r d1">Cédric Godin is a filmmaker, director and creative producer working across international broadcast production and original IP development.</p>
       <p class="r d2">His career began in live performance and touring productions before expanding into technical direction and audiovisual coordination for international broadcasters and media organisations including Sky News, ARTE, TV5, Bloomberg, NBC Universal, the EBU, Roland Garros and Eurovision.</p>
@@ -461,20 +477,20 @@ h2 {
   <p style="font-family:var(--mono);font-size:.54rem;letter-spacing:.1em;color:var(--dim);margin-bottom:2rem;opacity:.6;">Current development slate — internal projects, early-stage</p>
   <div class="slate">
     <a href="ip.html" class="ip r d1">
-      <div class="ip-tag">TV / Animation</div>
-      <h3>Original IP — 001</h3>
-      <p>Character-driven world in active structural development.</p>
+      <div class="ip-tag">Animation Series · Ages 6–12 · International</div>
+      <h3>Miss One</h3>
+      <p>Two twin sisters who fuse to become Miss One — a superhero protecting children from the hidden dangers of the digital world. Built for international markets.</p>
       <div class="ip-meta">
-        <span>STAGE: STRUCTURE / DOC v0.3</span>
+        <span>STAGE: DEVELOPMENT · e-dpo 000616668</span>
         <span class="ip-arrow">→</span>
       </div>
     </a>
     <a href="#" class="ip r d2">
-      <div class="ip-tag">Series</div>
-      <h3>Original IP — 002</h3>
-      <p>Institutional narrative system exploring escalation logic.</p>
+      <div class="ip-tag">TV Drama · 10 episodes · English</div>
+      <h3>Die With Peace</h3>
+      <p>In a quiet American town, one man has helped thirty-six people die — quietly, on his own terms. When a dying industrialist arrives with ten years of evidence, a war of mutual destruction begins.</p>
       <div class="ip-meta">
-        <span>STAGE: EARLY DEVELOPMENT</span>
+        <span>STAGE: DEVELOPMENT · v9</span>
         <span class="ip-arrow">→</span>
       </div>
     </a>
@@ -488,20 +504,34 @@ h2 {
     <div class="card r d1">
       <div class="card-idx">WRK.001</div>
       <h3>PTSD</h3>
-      <div class="c-type">Feature Film</div>
-      <p>Writer / Director / Producer</p>
+      <div class="c-type">Feature Film · 71 min · 2015</div>
+      <p>Writer / Director / Producer<br>Hexogen Pictures LLC — USA</p>
+      <div class="card-awards">
+        <span>★ Best Film — Chelsea Film Festival, New York</span>
+        <span>★ Best Actor — Chelsea Film Festival, New York</span>
+      </div>
+      <a href="https://youtu.be/LNjom-8E7hY" target="_blank" rel="noopener" class="card-link">Watch Trailer →</a>
     </div>
     <div class="card r d2">
       <div class="card-idx">WRK.002</div>
       <h3>X Art</h3>
-      <div class="c-type">Documentary</div>
-      <p>Director / Producer</p>
+      <div class="c-type">Documentary · 71 min · 2020</div>
+      <p>Director / Producer<br>19 artists — French, British &amp; New York scenes</p>
+      <div class="card-awards">
+        <span>★ Best Editing — Filmmaker Festival, Amsterdam</span>
+        <span>★ Best Documentary — Grenoble Street-Art Film Festival</span>
+      </div>
+      <a href="https://youtu.be/MmwznUrBlcs" target="_blank" rel="noopener" class="card-link">Watch Trailer →</a>
     </div>
     <div class="card r d3">
       <div class="card-idx">WRK.003</div>
       <h3>Who Is Taki</h3>
-      <div class="c-type">Documentary</div>
-      <p>Director / Producer</p>
+      <div class="c-type">Documentary · 20 min · 2020</div>
+      <p>Director / Producer<br>With Taki 183, Blek Le Rat &amp; Cornbread</p>
+      <div class="card-awards">
+        <span>World Premiere — First Amendment Gallery, San Francisco</span>
+      </div>
+      <a href="https://youtu.be/vpgdgQVJknU" target="_blank" rel="noopener" class="card-link">Watch Film →</a>
     </div>
   </div>
 </section>

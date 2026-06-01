@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>CG.STUDIO</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&family=JetBrains+Mono:wght@300;400&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:      #0b0b0b;
+  --surface: #0e0e0e;
+  --text:    #EDECEA;
+  --muted:   #A4A3A0;
+  --dim:     #5a5a5a;
+  --faint:   #1c1c1c;
+  --line:    #171717;
+  --accent:  #002FA7;
+  --glow:    rgba(0,47,167,.1);
+  --mono:    'JetBrains Mono', ui-monospace, monospace;
+  --ease:    cubic-bezier(0.16,1,.3,1);
+}
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+html { scroll-behavior:smooth; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Inter', 'Helvetica Neue', sans-serif;
+  font-weight: 300;
+  line-height: 1.7;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+a { color:inherit; text-decoration:none; }
+
+/* substrate */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(0,47,167,.02) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0,47,167,.02) 1px, transparent 1px);
+  background-size: 72px 72px;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ── REVEAL ────────────────────────────────────────── */
+.r {
+  opacity: 0;
+  transform: translateY(14px);
+  transition: opacity 1.1s var(--ease), transform 1.1s var(--ease);
+}
+.r.on { opacity:1; transform:none; }
+.d1 { transition-delay:.08s; }
+.d2 { transition-delay:.18s; }
+.d3 { transition-delay:.28s; }
+.d4 { transition-delay:.38s; }
+
+/* ── NAV ───────────────────────────────────────────── */
+nav {
+  position: fixed;
+  top:0; left:0; right:0;
+  padding: 18px 5vw;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: rgba(11,11,11,.6);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid transparent;
+  z-index: 100;
+  transition: background .4s, border-color .4s;
+}
+nav.scrolled {
+  background: rgba(11,11,11,.95);
+  border-color: var(--line);
+}
+
+.logo {
+  font-family: var(--mono);
+  font-size: .7rem;
+  letter-spacing: .12em;
+  color: var(--dim);
+  transition: color .3s;
+}
+.logo:hover { color: var(--text); }
+
+.links {
+  display: flex;
+  gap: 20px;
+  font-family: var(--mono);
+  font-size: .58rem;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+}
+.links a {
+  color: var(--dim);
+  transition: color .35s;
+  position: relative;
+  padding-bottom: 2px;
+}
+.links a::after {
+  content: '';
+  position: absolute;
+  bottom:0; left:0;
+  width:0; height:1px;
+  background: var(--accent);
+  transition: width .4s var(--ease);
+}
+.links a:hover { color: var(--text); }
+.links a:hover::after { width:100%; }
+
+.link-ip {
+  color: rgba(0,47,167,.65) !important;
+  border: 1px solid rgba(0,47,167,.2);
+  padding: 3px 9px;
+}
+.link-ip:hover {
+  color: var(--accent) !important;
+  background: var(--glow);
+  border-color: rgba(0,47,167,.4);
+}
+.link-ip::after { display:none !important; }
+
+/* ── HERO ──────────────────────────────────────────── */
+.hero {
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 120px 5vw 80px;
+  max-width: 1100px;
+  margin: 0 auto;
+  position: relative;
+  z-index: 1;
+}
+
+.kicker {
+  font-family: var(--mono);
+  font-size: .7rem;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 20px;
+  opacity: 0;
+  animation: aFade 1.2s var(--ease) .3s forwards;
+}
+
+h1 {
+  font-size: clamp(2rem, 4vw, 3.4rem);
+  font-weight: 300;
+  line-height: 1.2;
+  letter-spacing: -.02em;
+  margin-bottom: 18px;
+  opacity: 0;
+  animation: aRise 1.5s var(--ease) .5s forwards;
+}
+h1 em { font-style:normal; color:var(--dim); }
+
+.sub {
+  max-width: 620px;
+  color: var(--muted);
+  font-size: 1rem;
+  opacity: 0;
+  animation: aFade 1.2s var(--ease) .75s forwards;
+}
+
+.hero-foot {
+  position: absolute;
+  bottom: 2.8rem;
+  left: 5vw; right: 5vw;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  opacity: 0;
+  animation: aFade 1s ease 1.5s forwards;
+}
+.scroll-cue { display:flex; flex-direction:column; align-items:center; gap:.5rem; }
+.scroll-line {
+  width:1px; height:38px;
+  background: linear-gradient(to bottom, var(--dim), transparent);
+  animation: aPulse 2.4s ease-in-out infinite;
+}
+.scroll-lbl {
+  font-family: var(--mono);
+  font-size: .48rem;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  color: var(--dim);
+  opacity: .35;
+}
+.hero-stats {
+  font-family: var(--mono);
+  font-size: .5rem;
+  letter-spacing: .1em;
+  color: var(--faint);
+  text-align: right;
+  line-height: 2;
+}
+
+@keyframes aFade { to { opacity:1; } }
+@keyframes aRise { from { opacity:0; transform:translateY(14px); } to { opacity:1; transform:none; } }
+@keyframes aPulse { 0%,100% { opacity:.2; } 50% { opacity:.55; } }
+
+/* ── SECTION ───────────────────────────────────────── */
+section {
+  padding: 7.5rem 5vw;
+  max-width: 1100px;
+  margin: 0 auto;
+  border-top: 1px solid var(--line);
+  position: relative;
+  z-index: 1;
+}
+
+h2 {
+  font-family: var(--mono);
+  font-size: .68rem;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  color: var(--dim);
+  margin-bottom: 3rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.h2m {
+  font-size: .5rem;
+  letter-spacing: .1em;
+  color: var(--faint);
+}
+
+/* ── ABOUT ─────────────────────────────────────────── */
+.about-grid {
+  display: grid;
+  grid-template-columns: 120px 1fr;
+  gap: 3.5rem;
+}
+.about p {
+  max-width: 640px;
+  color: var(--muted);
+  font-size: 1rem;
+  line-height: 1.9;
+}
+.about p + p { margin-top: 1rem; }
+.highlight {
+  margin-top: 2rem;
+  border-left: 2px solid var(--accent);
+  padding-left: 1rem;
+  color: var(--text);
+  max-width: 600px;
+  line-height: 1.8;
+}
+
+/* ── IP SLATE ──────────────────────────────────────── */
+.slate {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1px;
+  background: var(--line);
+}
+.ip {
+  background: var(--surface);
+  padding: 2.2rem 2rem;
+  position: relative;
+  overflow: hidden;
+  transition: background .4s var(--ease);
+}
+.ip::before {
+  content: '';
+  position: absolute;
+  top:0; left:0;
+  width:0; height:2px;
+  background: var(--accent);
+  transition: width .55s var(--ease);
+}
+.ip:hover { background: #121212; }
+.ip:hover::before { width:100%; }
+
+.ip-tag {
+  font-family: var(--mono);
+  font-size: .54rem;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  color: var(--accent);
+  opacity: .7;
+  margin-bottom: .7rem;
+}
+.ip h3 { font-weight:400; font-size:1rem; margin-bottom:.5rem; }
+.ip p { color:var(--muted); font-size:.88rem; margin-bottom:.9rem; line-height:1.7; }
+.ip-meta {
+  font-family: var(--mono);
+  font-size: .5rem;
+  color: var(--faint);
+  letter-spacing: .12em;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.ip-arrow {
+  font-size: .6rem;
+  color: var(--faint);
+  transition: color .3s, transform .3s;
+}
+.ip:hover .ip-arrow { color:var(--accent); transform:translateX(3px); }
+
+/* ── WORKS ─────────────────────────────────────────── */
+.grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1px;
+  background: var(--line);
+}
+.card {
+  background: var(--bg);
+  padding: 2.2rem 2rem;
+  position: relative;
+  overflow: hidden;
+  transition: background .5s var(--ease);
+}
+.card::before {
+  content: '';
+  position: absolute;
+  top:0; left:0;
+  width:2px; height:0;
+  background: var(--accent);
+  transition: height .55s var(--ease);
+}
+.card:hover { background: var(--surface); }
+.card:hover::before { height:100%; }
+
+.card-idx {
+  font-family: var(--mono);
+  font-size: .46rem;
+  color: var(--faint);
+  letter-spacing: .1em;
+  margin-bottom: 1rem;
+}
+.card h3 { font-weight:400; font-size:1.05rem; margin-bottom:.35rem; }
+.card .c-type {
+  font-family: var(--mono);
+  font-size: .54rem;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: .5rem;
+}
+.card p { color:var(--muted); font-size:.85rem; transition:color .4s; }
+.card:hover p { color: var(--text); }
+
+/* ── CONTACT ───────────────────────────────────────── */
+.contact {
+  display: flex;
+  justify-content: space-between;
+  gap: 3rem;
+  flex-wrap: wrap;
+  align-items: flex-end;
+}
+.contact-links { display:flex; flex-direction:column; gap:.7rem; margin-top:1rem; }
+.contact-links a {
+  color: var(--muted);
+  font-size: .9rem;
+  transition: color .35s;
+  position: relative;
+  display: inline-block;
+  padding-bottom: 2px;
+}
+.contact-links a::after {
+  content: '';
+  position: absolute;
+  bottom:0; left:0;
+  width:0; height:1px;
+  background: var(--accent);
+  transition: width .45s var(--ease);
+}
+.contact-links a:hover { color: var(--text); }
+.contact-links a:hover::after { width:100%; }
+
+.contact-note {
+  font-family: var(--mono);
+  font-size: .56rem;
+  letter-spacing: .1em;
+  color: var(--faint);
+  text-align: right;
+  line-height: 1.9;
+}
+.contact-copy {
+  font-family: var(--mono);
+  font-size: .46rem;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  color: var(--line);
+  margin-top: 1.2rem;
+  text-align: right;
+}
+
+/* ── RESPONSIVE ────────────────────────────────────── */
+@media (max-width:900px) {
+  .links { display:none; }
+  section { padding:5rem 5vw; }
+  .about-grid { grid-template-columns:1fr; gap:2rem; }
+  .slate { grid-template-columns:1fr; }
+  .grid { grid-template-columns:1fr; }
+  .contact { flex-direction:column; align-items:flex-start; }
+  .contact-note, .contact-copy { text-align:left; }
+  .hero-foot { position:static; margin-top:3rem; }
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav id="nav">
+  <a href="#" class="logo">CG.STUDIO</a>
+  <div class="links">
+    <a href="#about">About</a>
+    <a href="#ip">IP Slate</a>
+    <a href="#work">Works</a>
+    <a href="ip.html" class="link-ip">IP Dev</a>
+    <a href="#contact">Contact</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="kicker">Narrative Studio</div>
+  <h1>Creator <em>—</em> Producer &amp; Director<br>developing original IPs for television, animation and film</h1>
+  <p class="sub">Independent studio focused on long-form storytelling and international co-productions.</p>
+  <p style="font-family:var(--mono);font-size:.58rem;letter-spacing:.14em;color:var(--dim);margin-top:1.1rem;opacity:0;animation:aFade 1.2s var(--ease) .95s forwards;">Feature · Documentary · Series development</p>
+  <div class="hero-foot">
+    <div class="scroll-cue">
+      <div class="scroll-line"></div>
+      <span class="scroll-lbl">Scroll</span>
+    </div>
+    <div class="hero-stats">
+      IPs IN DEVELOPMENT — 02<br>
+      BROADCAST CREDITS — 06+
+    </div>
+  </div>
+</div>
+
+<!-- ABOUT -->
+<section id="about">
+  <h2>About <span class="h2m">DOC.PROFILE / v2.1</span></h2>
+  <div class="about-grid">
+    <div></div>
+    <div class="about">
+      <p class="r d1">Cédric Godin is a filmmaker, director and creative producer working across international broadcast production and original IP development.</p>
+      <p class="r d2">His career began in live performance and touring productions before expanding into technical direction and audiovisual coordination for international broadcasters and media organisations including Sky News, ARTE, TV5, Bloomberg, NBC Universal, the EBU, Roland Garros and Eurovision.</p>
+      <p class="r d3">Alongside broadcast work, he develops and directs original documentaries and fiction projects exploring personal narratives, cultural movements and psychological themes. His work includes X Art, Who Is Taki and the award-winning feature PTSD.</p>
+      <p class="r d4">Today, his primary focus is the development of original intellectual properties for television, animation and film, building narrative worlds designed for international audiences and long-form storytelling.</p>
+      <div class="highlight r" style="transition-delay:.48s;">Alongside broadcast work, he develops original film, television and animation projects focused on scalable narrative worlds and international audiences.</div>
+    </div>
+  </div>
+</section>
+
+<!-- IP SLATE -->
+<section id="ip">
+  <h2>IP Slate <span class="h2m">PIPELINE / 2 ACTIVE</span></h2>
+  <p style="font-family:var(--mono);font-size:.54rem;letter-spacing:.1em;color:var(--dim);margin-bottom:2rem;opacity:.6;">Current development slate — internal projects, early-stage</p>
+  <div class="slate">
+    <a href="ip.html" class="ip r d1">
+      <div class="ip-tag">TV / Animation</div>
+      <h3>Original IP — 001</h3>
+      <p>Character-driven world in active structural development.</p>
+      <div class="ip-meta">
+        <span>STAGE: STRUCTURE / DOC v0.3</span>
+        <span class="ip-arrow">→</span>
+      </div>
+    </a>
+    <a href="#" class="ip r d2">
+      <div class="ip-tag">Series</div>
+      <h3>Original IP — 002</h3>
+      <p>Institutional narrative system exploring escalation logic.</p>
+      <div class="ip-meta">
+        <span>STAGE: EARLY DEVELOPMENT</span>
+        <span class="ip-arrow">→</span>
+      </div>
+    </a>
+  </div>
+</section>
+
+<!-- WORKS -->
+<section id="work">
+  <h2>Selected Works <span class="h2m">PRODUCED / 2018–2024</span></h2>
+  <div class="grid">
+    <div class="card r d1">
+      <div class="card-idx">WRK.001</div>
+      <h3>PTSD</h3>
+      <div class="c-type">Feature Film</div>
+      <p>Writer / Director / Producer</p>
+    </div>
+    <div class="card r d2">
+      <div class="card-idx">WRK.002</div>
+      <h3>X Art</h3>
+      <div class="c-type">Documentary</div>
+      <p>Director / Producer</p>
+    </div>
+    <div class="card r d3">
+      <div class="card-idx">WRK.003</div>
+      <h3>Who Is Taki</h3>
+      <div class="c-type">Documentary</div>
+      <p>Director / Producer</p>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <h2>Contact <span class="h2m">OPEN TO COLLABORATIONS</span></h2>
+  <div class="contact">
+    <div class="r d1">
+      <div style="font-family:var(--mono);font-size:.54rem;letter-spacing:.1em;color:var(--dim);">Available for: IP development · Co-production · Series &amp; Feature collaboration</div>
+      <div class="contact-links">
+        <a href="mailto:cedricgodin@gmail.com">cedricgodin@gmail.com</a>
+        <a href="https://linkedin.com/in/cedricgodin" target="_blank" rel="noopener">LinkedIn</a>
+      </div>
+    </div>
+    <div class="r d2">
+      <div class="contact-note">Available for co-development, co-production<br>and original IP partnerships.</div>
+      <div class="contact-copy">© 2026 CG.STUDIO</div>
+    </div>
+  </div>
+</section>
+
+<script>
+  const nav = document.getElementById('nav');
+  window.addEventListener('scroll', () => {
+    nav.classList.toggle('scrolled', window.scrollY > 40);
+  }, { passive:true });
+
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) { e.target.classList.add('on'); obs.unobserve(e.target); }
+    });
+  }, { threshold:0.08, rootMargin:'0px 0px -24px 0px' });
+  document.querySelectorAll('.r').forEach(el => obs.observe(el));
+</script>
+
+</body>
+</html>

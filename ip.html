@@ -1,0 +1,941 @@
+<!DOCTYPE html>
+<!--
+  ╔══════════════════════════════════════════════════════════════╗
+  ║  NARRATIVE DEVELOPMENT SYSTEM — INTERNAL DOCUMENT           ║
+  ║  Classification : CONFIDENTIAL                              ║
+  ║  Document       : DOC.001                                   ║
+  ║  Version        : 0.3 DRAFT                                 ║
+  ║  Last Modified  : 2026.05.31                                ║
+  ║  Author         : Cédric Godin                              ║
+  ╚══════════════════════════════════════════════════════════════╝
+-->
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>DOC.001 — Narrative Development — Cédric Godin</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&family=JetBrains+Mono:wght@300;400&display=swap" rel="stylesheet" />
+  <style>
+
+/* ═══════════════════════════════════════════════════════
+   DESIGN SYSTEM
+══════════════════════════════════════════════════════ */
+:root {
+  --black:     #080808;
+  --surface:   #0D0D0D;
+  --white:     #EDECEA;
+  --muted:     #A4A3A0;
+  --dim:       #464646;
+  --faint:     #1E1E1E;
+  --line:      #141414;
+  --blue:      #002FA7;
+  --blue-glow: rgba(0,47,167,.12);
+  --mono:      'JetBrains Mono', ui-monospace, monospace;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--black);
+  color: var(--white);
+  font-family: 'Inter', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  font-weight: 300;
+  font-size: 16px;
+  line-height: 1.7;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(0,47,167,.02) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0,47,167,.02) 1px, transparent 1px);
+  background-size: 72px 72px;
+  pointer-events: none;
+  z-index: 0;
+}
+
+a { text-decoration: none; color: inherit; }
+
+/* ═══════════════════════════════════════════════════════
+   REVEAL
+══════════════════════════════════════════════════════ */
+.r {
+  opacity: 0;
+  transform: translateY(12px);
+  transition: opacity 1s cubic-bezier(0.16,1,.3,1),
+              transform 1s cubic-bezier(0.16,1,.3,1);
+}
+.r.on { opacity: 1; transform: none; }
+.d1 { transition-delay: .08s; }
+.d2 { transition-delay: .18s; }
+
+/* ═══════════════════════════════════════════════════════
+   CLASSIFICATION BAR — TOP
+══════════════════════════════════════════════════════ */
+.class-bar {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 400;
+  background: var(--blue);
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 3rem;
+}
+.class-bar span {
+  font-family: var(--mono);
+  font-size: .5rem;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,.6);
+}
+.class-bar .class-main {
+  color: #fff;
+  letter-spacing: .28em;
+}
+
+/* ═══════════════════════════════════════════════════════
+   NAV
+══════════════════════════════════════════════════════ */
+nav {
+  position: fixed;
+  top: 28px;
+  left: 0; right: 0;
+  z-index: 300;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 5vw;
+  height: 54px;
+  background: rgba(8,8,8,.97);
+  border-bottom: 1px solid var(--line);
+  backdrop-filter: blur(12px);
+}
+
+.nav-breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: .6rem;
+}
+.nb-item {
+  font-family: var(--mono);
+  font-size: .58rem;
+  letter-spacing: .1em;
+  color: var(--dim);
+  transition: color .3s;
+}
+.nb-item:hover { color: var(--white); }
+.nb-sep { font-family: var(--mono); font-size: .55rem; color: var(--faint); }
+.nb-item.active { color: var(--white); }
+
+.nav-doc-meta {
+  display: flex;
+  align-items: center;
+  gap: 1.6rem;
+}
+.nav-doc-meta span {
+  font-family: var(--mono);
+  font-size: .52rem;
+  letter-spacing: .1em;
+  color: var(--faint);
+}
+.nav-doc-meta .status-dot {
+  display: inline-block;
+  width: 5px; height: 5px;
+  border-radius: 50%;
+  background: var(--blue);
+  margin-right: .4rem;
+  animation: blink 2.5s ease-in-out infinite;
+}
+@keyframes blink { 0%,100%{ opacity:.3; } 50%{ opacity:1; } }
+
+/* ═══════════════════════════════════════════════════════
+   IP HERO
+══════════════════════════════════════════════════════ */
+#ip-hero {
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 110px 5vw 7rem;
+  position: relative;
+  z-index: 1;
+  border-bottom: 1px solid var(--line);
+}
+
+.ip-hero-inner { max-width: 1200px; margin: 0 auto; width: 100%; }
+
+.ip-doc-ref {
+  display: flex;
+  align-items: center;
+  gap: 1.4rem;
+  margin-bottom: 4rem;
+  opacity: 0;
+  animation: aFade 1s ease .2s forwards;
+}
+.ip-doc-num {
+  font-family: var(--mono);
+  font-size: .6rem;
+  letter-spacing: .2em;
+  color: var(--blue);
+  border: 1px solid rgba(0,47,167,.3);
+  padding: 5px 12px;
+}
+.ip-doc-type {
+  font-family: var(--mono);
+  font-size: .58rem;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  color: var(--dim);
+}
+.ip-doc-ver {
+  font-family: var(--mono);
+  font-size: .52rem;
+  letter-spacing: .1em;
+  color: var(--faint);
+  margin-left: auto;
+}
+
+.ip-hero-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6rem;
+  align-items: end;
+}
+
+.ip-title-block {
+  opacity: 0;
+  animation: aRise 1.4s cubic-bezier(0.16,1,.3,1) .4s forwards;
+}
+.ip-title {
+  font-size: clamp(3.5rem, 9vw, 8rem);
+  font-weight: 300;
+  letter-spacing: -.035em;
+  line-height: .92;
+  color: var(--white);
+}
+.ip-title em { font-style: normal; color: #1E2A4A; }
+
+.ip-hero-meta {
+  opacity: 0;
+  animation: aFade 1.2s ease .7s forwards;
+}
+.ip-format {
+  font-family: var(--mono);
+  font-size: .58rem;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  color: var(--dim);
+  margin-bottom: 1.6rem;
+}
+.ip-status {
+  display: inline-flex;
+  align-items: center;
+  gap: .6rem;
+  border: 1px solid var(--faint);
+  padding: .6rem 1rem;
+  margin-bottom: 2rem;
+}
+.ip-status-dot {
+  width: 5px; height: 5px;
+  border-radius: 50%;
+  background: var(--blue);
+  animation: blink 2.5s ease-in-out infinite;
+}
+.ip-status-text {
+  font-family: var(--mono);
+  font-size: .54rem;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  color: var(--dim);
+}
+
+.ip-logline {
+  font-size: clamp(.82rem, 1.2vw, .96rem);
+  color: var(--muted);
+  line-height: 1.8;
+  max-width: 420px;
+}
+
+@keyframes aFade { to { opacity:1; } }
+@keyframes aRise { from { opacity:0; transform:translateY(14px); } to { opacity:1; transform:none; } }
+
+/* ═══════════════════════════════════════════════════════
+   DOCUMENT SECTIONS — COLLAPSIBLE
+══════════════════════════════════════════════════════ */
+.doc-wrap {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 5vw;
+  position: relative;
+  z-index: 1;
+}
+
+.doc-block {
+  border-top: 1px solid var(--line);
+}
+
+.doc-toggle {
+  width: 100%;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 2.2rem 0;
+  display: flex;
+  align-items: center;
+  gap: 1.6rem;
+  text-align: left;
+  transition: background .3s;
+}
+.doc-toggle:hover { background: none; }
+
+.dt-num {
+  font-family: var(--mono);
+  font-size: .52rem;
+  letter-spacing: .16em;
+  color: var(--blue);
+  opacity: .5;
+  width: 36px;
+  flex-shrink: 0;
+}
+
+.dt-label {
+  font-family: var(--mono);
+  font-size: .6rem;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: var(--dim);
+  flex: 1;
+  transition: color .3s;
+}
+.doc-block.open .dt-label { color: var(--white); }
+.doc-toggle:hover .dt-label { color: var(--muted); }
+
+.dt-meta {
+  font-family: var(--mono);
+  font-size: .5rem;
+  letter-spacing: .1em;
+  color: var(--faint);
+}
+
+.dt-icon {
+  font-family: var(--mono);
+  font-size: .7rem;
+  color: var(--faint);
+  width: 20px;
+  text-align: center;
+  transition: transform .4s cubic-bezier(0.16,1,.3,1), color .3s;
+  flex-shrink: 0;
+}
+.doc-block.open .dt-icon {
+  transform: rotate(45deg);
+  color: var(--blue);
+}
+
+/* Collapsible content */
+.doc-content {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height .8s cubic-bezier(0.16,1,.3,1);
+}
+.doc-block.open .doc-content { max-height: 3000px; }
+
+.doc-inner {
+  display: grid;
+  grid-template-columns: 36px 120px 1fr;
+  gap: 0 2rem;
+  padding-bottom: 3.5rem;
+}
+.di-spacer { }
+.di-label { }
+.di-label-text {
+  font-family: var(--mono);
+  font-size: .52rem;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--faint);
+  padding-top: .3rem;
+}
+
+.di-body { }
+.di-body h3 {
+  font-size: 1.3rem;
+  font-weight: 300;
+  letter-spacing: -.01em;
+  color: var(--white);
+  margin-bottom: 1.6rem;
+  line-height: 1.3;
+}
+.di-body p {
+  font-size: .95rem;
+  line-height: 1.9;
+  color: var(--muted);
+  max-width: 600px;
+}
+.di-body p + p { margin-top: 1.4rem; }
+
+/* character grid */
+.char-grid {
+  display: grid;
+  grid-template-columns: repeat(2,1fr);
+  gap: 1px;
+  background: var(--line);
+  margin-top: 2rem;
+}
+.char-card {
+  background: var(--black);
+  padding: 2rem 1.8rem;
+  transition: background .35s;
+}
+.char-card:hover { background: var(--surface); }
+.cc-role {
+  font-family: var(--mono);
+  font-size: .52rem;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: var(--blue);
+  opacity: .6;
+  margin-bottom: .6rem;
+}
+.cc-name {
+  font-size: .96rem;
+  font-weight: 400;
+  color: var(--white);
+  margin-bottom: .9rem;
+}
+.cc-func {
+  font-size: .8rem;
+  color: var(--dim);
+  line-height: 1.65;
+}
+.cc-contradiction {
+  margin-top: .8rem;
+  padding-top: .8rem;
+  border-top: 1px solid var(--line);
+}
+.cc-contradiction-label {
+  font-family: var(--mono);
+  font-size: .46rem;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--faint);
+  margin-bottom: .4rem;
+}
+.cc-contradiction-text {
+  font-size: .78rem;
+  color: var(--dim);
+  line-height: 1.6;
+}
+
+/* arc phases */
+.arc-phases {
+  display: flex;
+  gap: 1px;
+  background: var(--line);
+  margin-top: 2rem;
+}
+.arc-phase {
+  flex: 1;
+  background: var(--black);
+  padding: 1.8rem 1.6rem;
+  transition: background .35s;
+}
+.arc-phase:hover { background: var(--surface); }
+.ap-num {
+  font-family: var(--mono);
+  font-size: .48rem;
+  letter-spacing: .16em;
+  color: var(--blue);
+  opacity: .4;
+  margin-bottom: .6rem;
+}
+.ap-title {
+  font-size: .82rem;
+  color: var(--white);
+  font-weight: 400;
+  margin-bottom: .7rem;
+}
+.ap-body {
+  font-size: .76rem;
+  color: var(--dim);
+  line-height: 1.65;
+}
+
+/* tone tags */
+.tone-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .5rem;
+  margin-top: 1.6rem;
+}
+.t-tag {
+  font-family: var(--mono);
+  font-size: .54rem;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--dim);
+  border: 1px solid var(--faint);
+  padding: .4rem .9rem;
+  transition: border-color .3s, color .3s;
+}
+.t-tag:hover { border-color: var(--blue); color: var(--muted); }
+
+/* status badge */
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: .8rem;
+  border: 1px solid var(--faint);
+  padding: .9rem 1.4rem;
+  margin-top: 1.4rem;
+  background: var(--surface);
+}
+.sb-dot {
+  width: 5px; height: 5px;
+  border-radius: 50%;
+  background: var(--blue);
+  animation: blink 2.5s ease-in-out infinite;
+}
+.sb-text {
+  font-family: var(--mono);
+  font-size: .56rem;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--dim);
+}
+
+/* activity log */
+.activity-log {
+  margin-top: 2.2rem;
+  border: 1px solid var(--line);
+}
+.al-header {
+  padding: .8rem 1.2rem;
+  border-bottom: 1px solid var(--line);
+  font-family: var(--mono);
+  font-size: .52rem;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--faint);
+}
+.al-entry {
+  padding: .75rem 1.2rem;
+  display: flex;
+  gap: 1.6rem;
+  border-bottom: 1px solid var(--line);
+  align-items: baseline;
+}
+.al-entry:last-child { border-bottom: none; }
+.al-date {
+  font-family: var(--mono);
+  font-size: .5rem;
+  letter-spacing: .08em;
+  color: var(--faint);
+  white-space: nowrap;
+  width: 80px;
+  flex-shrink: 0;
+}
+.al-event {
+  font-family: var(--mono);
+  font-size: .54rem;
+  letter-spacing: .08em;
+  color: var(--dim);
+}
+
+/* ═══════════════════════════════════════════════════════
+   CONTACT FOOTER
+══════════════════════════════════════════════════════ */
+#ip-contact {
+  border-top: 1px solid var(--line);
+  position: relative;
+  z-index: 1;
+}
+.ip-contact-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 6rem 5vw;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 3rem;
+}
+.ic-label {
+  font-family: var(--mono);
+  font-size: .58rem;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: var(--dim);
+  margin-bottom: 1.8rem;
+}
+.ic-links { display: flex; flex-direction: column; gap: .9rem; }
+.ic-links a {
+  font-size: .9rem;
+  color: var(--dim);
+  transition: color .35s;
+  position: relative;
+  display: inline-block;
+  padding-bottom: 2px;
+}
+.ic-links a::after {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 0;
+  width: 0; height: 1px;
+  background: var(--blue);
+  transition: width .45s cubic-bezier(0.16,1,.3,1);
+}
+.ic-links a:hover { color: var(--white); }
+.ic-links a:hover::after { width: 100%; }
+.ic-right { text-align: right; }
+.ic-note {
+  font-family: var(--mono);
+  font-size: .58rem;
+  color: #262626;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  line-height: 2;
+}
+.ic-back {
+  font-family: var(--mono);
+  font-size: .54rem;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--faint);
+  margin-top: 1.2rem;
+  display: block;
+  transition: color .3s;
+}
+.ic-back:hover { color: var(--dim); }
+
+/* ═══════════════════════════════════════════════════════
+   RESPONSIVE
+══════════════════════════════════════════════════════ */
+@media (max-width: 860px) {
+  .class-bar { gap: 1rem; }
+  #ip-hero { padding: 110px 5vw 5rem; }
+  .ip-hero-grid { grid-template-columns: 1fr; gap: 3rem; }
+  .ip-title { font-size: clamp(3rem,13vw,5rem); }
+  .doc-inner { grid-template-columns: 36px 1fr; }
+  .di-label { display: none; }
+  .char-grid { grid-template-columns: 1fr; }
+  .arc-phases { flex-direction: column; }
+  .ip-contact-inner { flex-direction: column; align-items: flex-start; }
+  .ic-right { text-align: left; }
+}
+  </style>
+</head>
+<body>
+
+<!-- CLASSIFICATION BAR -->
+<div class="class-bar">
+  <span>GODIN.STUDIO</span>
+  <span class="class-main">CONFIDENTIAL — DEVELOPMENT DOCUMENT — NDA REQUIRED</span>
+  <span>DOC.001 / v0.3</span>
+</div>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-breadcrumb">
+    <a href="index.html" class="nb-item mono">GODIN.STUDIO</a>
+    <span class="nb-sep mono">/</span>
+    <span class="nb-item mono">IP Development</span>
+    <span class="nb-sep mono">/</span>
+    <span class="nb-item active mono">DOC.001</span>
+  </div>
+  <div class="nav-doc-meta">
+    <span class="mono"><span class="status-dot"></span>IN DEVELOPMENT</span>
+    <span class="mono">v0.3 DRAFT</span>
+    <span class="mono">2026.05.31</span>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section id="ip-hero">
+  <div class="ip-hero-inner">
+    <div class="ip-doc-ref">
+      <div class="ip-doc-num mono">DOC.001</div>
+      <div class="ip-doc-type mono">Television Series · Animation</div>
+      <div class="ip-doc-ver mono">Version 0.3 — DRAFT — 2026.05.31</div>
+    </div>
+    <div class="ip-hero-grid">
+      <div class="ip-title-block">
+        <h1 class="ip-title">[IP<br>TITLE]</h1>
+      </div>
+      <div class="ip-hero-meta">
+        <div class="ip-format mono">Original Narrative IP — Long-Form Development</div>
+        <div class="ip-status">
+          <div class="ip-status-dot"></div>
+          <span class="ip-status-text mono">Original narrative development in progress</span>
+        </div>
+        <p class="ip-logline">A structured narrative world under active development. This document presents the conceptual architecture, character system, and narrative logic of an original IP in development for international television and animation markets.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- DOCUMENT SECTIONS -->
+<div class="doc-wrap">
+
+  <!-- 01 — CONCEPT CORE -->
+  <div class="doc-block r" id="sec-01">
+    <button class="doc-toggle" onclick="toggleSection('sec-01')">
+      <span class="dt-num mono">01</span>
+      <span class="dt-label">Concept Core</span>
+      <span class="dt-meta mono">PREMISE / ENGINE</span>
+      <span class="dt-icon">+</span>
+    </button>
+    <div class="doc-content">
+      <div class="doc-inner">
+        <div class="di-spacer"></div>
+        <div class="di-label"><div class="di-label-text">Premise</div></div>
+        <div class="di-body">
+          <h3>Central Narrative Premise</h3>
+          <p>[Define the central narrative premise here. What is the fundamental situation that drives this story? What is the core dramatic question that the entire world is built to answer?]</p>
+          <p>The structural tension of this world is built on [describe opposing forces — institutional vs. individual, visibility vs. concealment, inherited system vs. emerging order]. This tension is not resolved — it is the engine.</p>
+          <p>The core narrative engine operates through [describe the mechanism that generates ongoing conflict and story — a recurring cycle, a systemic pressure, an unsolvable contradiction]. Each episode, season, or narrative arc is a new application of this engine, not a departure from it.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 02 — WORLD STRUCTURE -->
+  <div class="doc-block r" id="sec-02">
+    <button class="doc-toggle" onclick="toggleSection('sec-02')">
+      <span class="dt-num mono">02</span>
+      <span class="dt-label">World Structure</span>
+      <span class="dt-meta mono">RULES / SYSTEMS</span>
+      <span class="dt-icon">+</span>
+    </button>
+    <div class="doc-content">
+      <div class="doc-inner">
+        <div class="di-spacer"></div>
+        <div class="di-label"><div class="di-label-text">World</div></div>
+        <div class="di-body">
+          <h3>Rules of the Universe</h3>
+          <p>[Describe the foundational rules of this world. What is fixed? What can change? What are the immutable laws — social, physical, institutional — that characters cannot escape?]</p>
+          <p>The institutional systems of this world are structured around [describe the dominant social or political architecture — hierarchy, surveillance, resource control, access systems]. These systems are not backdrop — they are antagonist.</p>
+          <p>The constraints that generate narrative conflict: [list 3–4 specific structural constraints — limitations on information, movement, agency, identity, time]. Each constraint creates a pressure that characters must navigate, not solve.</p>
+          <p>The structural logic of the world is [describe the internal coherence — what makes this world believable and consistent across long-form development. What are the rules writers cannot break without destroying the world?]</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 03 — CHARACTER SYSTEM -->
+  <div class="doc-block r" id="sec-03">
+    <button class="doc-toggle" onclick="toggleSection('sec-03')">
+      <span class="dt-num mono">03</span>
+      <span class="dt-label">Character System</span>
+      <span class="dt-meta mono">FUNCTIONS / CONTRADICTIONS</span>
+      <span class="dt-icon">+</span>
+    </button>
+    <div class="doc-content">
+      <div class="doc-inner">
+        <div class="di-spacer"></div>
+        <div class="di-label"><div class="di-label-text">Characters</div></div>
+        <div class="di-body">
+          <h3>Structural Character Roles</h3>
+          <p>Characters are defined by their function within the narrative architecture, not by biographical detail. Each character exists to sustain a specific structural pressure on the story engine.</p>
+          <div class="char-grid">
+            <div class="char-card">
+              <div class="cc-role mono">Primary Function</div>
+              <div class="cc-name">Character A</div>
+              <div class="cc-func">[Functional role in the narrative system — what structural position does this character occupy?]</div>
+              <div class="cc-contradiction">
+                <div class="cc-contradiction-label mono">Internal Contradiction</div>
+                <div class="cc-contradiction-text">[The unresolvable tension that drives this character's decisions without resolution.]</div>
+              </div>
+            </div>
+            <div class="char-card">
+              <div class="cc-role mono">Opposing Function</div>
+              <div class="cc-name">Character B</div>
+              <div class="cc-func">[Functional role — how does this character create structural friction against Character A?]</div>
+              <div class="cc-contradiction">
+                <div class="cc-contradiction-label mono">Internal Contradiction</div>
+                <div class="cc-contradiction-text">[The belief system that makes this character's logic internally coherent but systemically opposed.]</div>
+              </div>
+            </div>
+            <div class="char-card">
+              <div class="cc-role mono">System Function</div>
+              <div class="cc-name">Character C</div>
+              <div class="cc-func">[Functional role — how does this character represent or embody the world's institutional logic?]</div>
+              <div class="cc-contradiction">
+                <div class="cc-contradiction-label mono">Internal Contradiction</div>
+                <div class="cc-contradiction-text">[The gap between this character's function and their awareness of that function.]</div>
+              </div>
+            </div>
+            <div class="char-card">
+              <div class="cc-role mono">Catalyst Function</div>
+              <div class="cc-name">Character D</div>
+              <div class="cc-func">[Functional role — what disruption does this character introduce to the stable system?]</div>
+              <div class="cc-contradiction">
+                <div class="cc-contradiction-label mono">Internal Contradiction</div>
+                <div class="cc-contradiction-text">[The reason this character's disruption is also their undoing.]</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 04 — NARRATIVE ARCHITECTURE -->
+  <div class="doc-block r" id="sec-04">
+    <button class="doc-toggle" onclick="toggleSection('sec-04')">
+      <span class="dt-num mono">04</span>
+      <span class="dt-label">Narrative Architecture</span>
+      <span class="dt-meta mono">ESCALATION / LONG-FORM</span>
+      <span class="dt-icon">+</span>
+    </button>
+    <div class="doc-content">
+      <div class="doc-inner">
+        <div class="di-spacer"></div>
+        <div class="di-label"><div class="di-label-text">Structure</div></div>
+        <div class="di-body">
+          <h3>Long-Form Story Logic</h3>
+          <p>The narrative is designed to scale across multiple seasons without requiring resolution of its central engine. Each escalation deepens the structural tension rather than releasing it.</p>
+          <div class="arc-phases">
+            <div class="arc-phase">
+              <div class="ap-num mono">Phase 01</div>
+              <div class="ap-title">Inciting Disruption</div>
+              <div class="ap-body">[What breaks the equilibrium of this world? What event makes the status quo unsustainable and forces the narrative engine into motion?]</div>
+            </div>
+            <div class="arc-phase">
+              <div class="ap-num mono">Phase 02</div>
+              <div class="ap-title">Escalation Logic</div>
+              <div class="ap-body">[How does each narrative unit escalate the central tension? What is the mechanism of escalation — revelation, consequence, system response?]</div>
+            </div>
+            <div class="arc-phase">
+              <div class="ap-num mono">Phase 03</div>
+              <div class="ap-title">Long-Form Evolution</div>
+              <div class="ap-body">[How does the world change over multiple seasons while the core engine remains intact? What structural shifts are possible without destroying the premise?]</div>
+            </div>
+          </div>
+          <p style="margin-top:2rem;">[Describe the scalability of this narrative — what makes it designed for long-form development rather than a single season or film. What is the infinite engine?]</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 05 — TONE & VISUAL DIRECTION -->
+  <div class="doc-block r" id="sec-05">
+    <button class="doc-toggle" onclick="toggleSection('sec-05')">
+      <span class="dt-num mono">05</span>
+      <span class="dt-label">Tone &amp; Visual Direction</span>
+      <span class="dt-meta mono">REGISTER / ENERGY</span>
+      <span class="dt-icon">+</span>
+    </button>
+    <div class="doc-content">
+      <div class="doc-inner">
+        <div class="di-spacer"></div>
+        <div class="di-label"><div class="di-label-text">Tone</div></div>
+        <div class="di-body">
+          <h3>Narrative Energy &amp; Register</h3>
+          <p>[Describe the tone logic of this world — not mood, but the structural relationship between information and audience. Is this a world that withholds? Overwhelms? Deceives? Reveals slowly?]</p>
+          <p>[Describe the pacing logic — how fast does this world move? What is the relationship between event density and emotional weight? Is silence or action the primary carrier of meaning?]</p>
+          <p>[Describe the visual philosophy — not specific references, but the structural approach to image. What does the camera know that characters don't? What is kept offscreen and why?]</p>
+          <div class="tone-tags">
+            <div class="t-tag">Structural Tension</div>
+            <div class="t-tag">Restrained Pacing</div>
+            <div class="t-tag">Institutional Register</div>
+            <div class="t-tag">Psychological Density</div>
+            <div class="t-tag">Long-Form Design</div>
+            <div class="t-tag">International Format</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 06 — STATUS -->
+  <div class="doc-block r" id="sec-06">
+    <button class="doc-toggle" onclick="toggleSection('sec-06')" style="--open:true;">
+      <span class="dt-num mono">06</span>
+      <span class="dt-label">Development Status</span>
+      <span class="dt-meta mono">PHASE / LOG</span>
+      <span class="dt-icon">+</span>
+    </button>
+    <div class="doc-content">
+      <div class="doc-inner">
+        <div class="di-spacer"></div>
+        <div class="di-label"><div class="di-label-text">Status</div></div>
+        <div class="di-body">
+          <h3>Current Phase</h3>
+          <p>This IP is in active concept development. The architecture presented in this document represents the foundational structure from which full bible, pilot episode, and series outline will be developed.</p>
+          <div class="status-badge">
+            <div class="sb-dot"></div>
+            <span class="sb-text mono">Structure Phase — Concept Architecture Complete</span>
+          </div>
+          <div class="activity-log">
+            <div class="al-header mono">Activity Log — DOC.001</div>
+            <div class="al-entry">
+              <span class="al-date mono">2026.05.31</span>
+              <span class="al-event mono">Document v0.3 — Structure sections updated. Character system expanded.</span>
+            </div>
+            <div class="al-entry">
+              <span class="al-date mono">2026.05.15</span>
+              <span class="al-event mono">Document v0.2 — Narrative architecture drafted. World logic defined.</span>
+            </div>
+            <div class="al-entry">
+              <span class="al-date mono">2026.04.28</span>
+              <span class="al-event mono">Document v0.1 — Initial concept core established. Premise locked.</span>
+            </div>
+            <div class="al-entry">
+              <span class="al-date mono">2026.04.10</span>
+              <span class="al-event mono">DOC.001 created — IP initiated. Development phase: Idea → Structure.</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- end doc-wrap -->
+
+<!-- CONTACT -->
+<section id="ip-contact">
+  <div class="ip-contact-inner">
+    <div class="r">
+      <div class="ic-label mono">For selective narrative development discussions</div>
+      <div class="ic-links">
+        <a href="mailto:cedricgodin@gmail.com">cedricgodin@gmail.com</a>
+        <a href="https://linkedin.com/in/cedricgodin" target="_blank" rel="noopener">LinkedIn</a>
+      </div>
+    </div>
+    <div class="ic-right r d1">
+      <div class="ic-note mono">Open to selective narrative<br>development collaborations.</div>
+      <a href="index.html" class="ic-back mono">← Return to Studio</a>
+    </div>
+  </div>
+</section>
+
+<script>
+  // Section accordion
+  function toggleSection(id) {
+    const block = document.getElementById(id);
+    block.classList.toggle('open');
+  }
+
+  // Open status section by default
+  document.getElementById('sec-06').classList.add('open');
+
+  // Scroll reveal
+  const revEls = document.querySelectorAll('.r');
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) { e.target.classList.add('on'); obs.unobserve(e.target); }
+    });
+  }, { threshold: 0.06, rootMargin: '0px 0px -24px 0px' });
+  revEls.forEach(el => obs.observe(el));
+</script>
+
+</body>
+</html>

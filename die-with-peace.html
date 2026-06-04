@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Die With Peace — CG.STUDIO</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&family=JetBrains+Mono:wght@300;400&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:      #0b0b0b;
+  --surface: #0e0e0e;
+  --text:    #EDECEA;
+  --muted:   #B8B7B4;
+  --dim:     #787876;
+  --faint:   #383836;
+  --line:    #171717;
+  --accent:  #002FA7;
+  --glow:    rgba(0,47,167,.1);
+  --mono:    'JetBrains Mono', ui-monospace, monospace;
+  --ease:    cubic-bezier(0.16,1,.3,1);
+}
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+html { scroll-behavior:smooth; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Inter', 'Helvetica Neue', sans-serif;
+  font-weight: 300;
+  line-height: 1.7;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+a { color:inherit; text-decoration:none; }
+
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(0,47,167,.02) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0,47,167,.02) 1px, transparent 1px);
+  background-size: 72px 72px;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* NAV */
+nav {
+  position: fixed;
+  top:0; left:0; right:0;
+  padding: 18px 5vw;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: rgba(11,11,11,.6);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid transparent;
+  z-index: 100;
+  transition: background .4s, border-color .4s;
+}
+nav.scrolled { background: rgba(11,11,11,.95); border-color: var(--line); }
+.nav-left {
+  display: flex;
+  align-items: center;
+  gap: .8rem;
+  font-family: var(--mono);
+  font-size: .58rem;
+  letter-spacing: .12em;
+  color: var(--dim);
+}
+.nav-sep { color: var(--faint); }
+.nav-current { color: var(--text); }
+.nav-back {
+  font-family: var(--mono);
+  font-size: .58rem;
+  letter-spacing: .12em;
+  color: var(--dim);
+  transition: color .3s;
+}
+.nav-back:hover { color: var(--text); }
+
+/* HERO */
+.hero {
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 120px 5vw 7rem;
+  max-width: 1100px;
+  margin: 0 auto;
+  position: relative;
+  z-index: 1;
+}
+.ip-tag {
+  font-family: var(--mono);
+  font-size: .62rem;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 1.8rem;
+  opacity: 0;
+  animation: aFade 1s var(--ease) .3s forwards;
+}
+h1 {
+  font-size: clamp(3rem, 8vw, 7rem);
+  font-weight: 300;
+  line-height: .92;
+  letter-spacing: -.03em;
+  margin-bottom: 2.5rem;
+  opacity: 0;
+  animation: aRise 1.5s var(--ease) .5s forwards;
+}
+h1 em { font-style:normal; color: var(--dim); }
+
+.logline {
+  max-width: 580px;
+  font-size: 1.05rem;
+  color: var(--muted);
+  line-height: 1.85;
+  font-style: italic;
+  opacity: 0;
+  animation: aFade 1.2s var(--ease) .8s forwards;
+}
+.hero-meta {
+  display: flex;
+  gap: 2.5rem;
+  margin-top: 2.5rem;
+  opacity: 0;
+  animation: aFade 1s var(--ease) 1s forwards;
+}
+.meta-item {
+  font-family: var(--mono);
+  font-size: .54rem;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--faint);
+  line-height: 1.8;
+}
+.meta-item span { display: block; color: var(--dim); }
+
+@keyframes aFade { to { opacity:1; } }
+@keyframes aRise { from { opacity:0; transform:translateY(14px); } to { opacity:1; transform:none; } }
+
+/* REVEAL */
+.r {
+  opacity: 0;
+  transform: translateY(14px);
+  transition: opacity 1.1s var(--ease), transform 1.1s var(--ease);
+}
+.r.on { opacity:1; transform:none; }
+.d1 { transition-delay:.08s; }
+.d2 { transition-delay:.18s; }
+.d3 { transition-delay:.28s; }
+.d4 { transition-delay:.38s; }
+
+/* SECTIONS */
+section {
+  padding: 6rem 5vw;
+  max-width: 1100px;
+  margin: 0 auto;
+  border-top: 1px solid var(--line);
+  position: relative;
+  z-index: 1;
+}
+h2 {
+  font-family: var(--mono);
+  font-size: .64rem;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  color: var(--dim);
+  margin-bottom: 2.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.h2m { font-size: .5rem; letter-spacing: .1em; color: var(--faint); }
+
+/* BODY TEXT */
+.body-col p {
+  max-width: 660px;
+  color: var(--muted);
+  font-size: 1rem;
+  line-height: 1.9;
+}
+.body-col p + p { margin-top: 1rem; }
+.pull-quote {
+  margin-top: 2rem;
+  border-left: 2px solid var(--accent);
+  padding-left: 1.2rem;
+  color: var(--text);
+  max-width: 580px;
+  font-size: 1rem;
+  line-height: 1.8;
+  font-style: italic;
+}
+
+/* CHARACTERS */
+.char-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1px;
+  background: var(--line);
+}
+.char-card {
+  background: var(--bg);
+  padding: 2rem 1.8rem;
+  transition: background .35s;
+}
+.char-card:hover { background: var(--surface); }
+.char-role {
+  font-family: var(--mono);
+  font-size: .5rem;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: var(--accent);
+  opacity: .65;
+  margin-bottom: .5rem;
+}
+.char-name { font-size: .95rem; font-weight: 400; margin-bottom: .7rem; }
+.char-desc { font-size: .85rem; color: var(--dim); line-height: 1.65; }
+
+/* FORMAT */
+.format-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1px;
+  background: var(--line);
+}
+.format-block { background: var(--surface); padding: 1.8rem 1.6rem; }
+.fb-label {
+  font-family: var(--mono);
+  font-size: .5rem;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  color: var(--faint);
+  margin-bottom: .6rem;
+}
+.fb-value { font-size: .95rem; color: var(--text); }
+
+/* STATUS */
+.status-line {
+  display: flex;
+  align-items: center;
+  gap: .8rem;
+  margin-bottom: 1.5rem;
+}
+.status-dot {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--accent);
+  animation: pulse 2.5s ease-in-out infinite;
+}
+@keyframes pulse { 0%,100%{opacity:.3} 50%{opacity:1} }
+.status-text {
+  font-family: var(--mono);
+  font-size: .58rem;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  color: var(--dim);
+}
+
+/* CONTACT */
+.contact-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  flex-wrap: wrap;
+  gap: 2rem;
+}
+.contact-links { display:flex; flex-direction:column; gap:.6rem; margin-top:1rem; }
+.contact-links a {
+  color: var(--muted);
+  font-size: 1rem;
+  transition: color .35s;
+  position: relative;
+  display: inline-block;
+  padding-bottom: 2px;
+}
+.contact-links a::after {
+  content: '';
+  position: absolute;
+  bottom:0; left:0;
+  width:0; height:1px;
+  background: var(--accent);
+  transition: width .45s var(--ease);
+}
+.contact-links a:hover { color: var(--text); }
+.contact-links a:hover::after { width:100%; }
+.contact-note {
+  font-family: var(--mono);
+  font-size: .54rem;
+  letter-spacing: .1em;
+  color: var(--faint);
+  text-align: right;
+  line-height: 2;
+}
+
+/* RESPONSIVE */
+@media (max-width: 860px) {
+  .char-grid { grid-template-columns: 1fr; }
+  .format-grid { grid-template-columns: 1fr 1fr; }
+  .contact-row { flex-direction: column; align-items: flex-start; }
+  .contact-note { text-align: left; }
+}
+</style>
+</head>
+<body>
+
+<nav id="nav">
+  <div class="nav-left">
+    <a href="index.html">CG.STUDIO</a>
+    <span class="nav-sep">/</span>
+    <span class="nav-sep">IP Slate</span>
+    <span class="nav-sep">/</span>
+    <span class="nav-current">Die With Peace</span>
+  </div>
+  <a href="index.html#ip" class="nav-back">← Back</a>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="ip-tag">TV Drama · Original IP · DOC.002</div>
+  <h1>Die With <em>Peace</em></h1>
+  <p class="logline">"One man holds the price of every death in this town. Until someone arrives to set the price of his."</p>
+  <div class="hero-meta">
+    <div class="meta-item">Format<span>TV Drama</span></div>
+    <div class="meta-item">Episodes<span>10 × 60 min</span></div>
+    <div class="meta-item">Language<span>English</span></div>
+    <div class="meta-item">Status<span>In Development</span></div>
+  </div>
+</div>
+
+<!-- THE SERIES -->
+<section id="series">
+  <h2>The Series <span class="h2m">PREMISE / ENGINE</span></h2>
+  <div class="body-col">
+    <p class="r d1">In a quiet American town, Mike Peace runs an herbal shop. His wife Amanda runs the funeral home next door. Together, they take care of the living and the dead. For ten years, no one has asked questions.</p>
+    <p class="r d2">Mike has also done something else — helped thirty-six people die. Thirty-six private decisions, made on his own terms, outside any law or institution. He has built a moral protocol no one authorized him to apply. Sometimes he helps. Sometimes he refuses. And sometimes, when the protocol leads him there, he makes decisions that go beyond what anyone asked him to do.</p>
+    <p class="r d3">Then a stranger arrives from Atlanta. Andrew Walton is dying. He has six months and ten years of documentation on Mike. He wants what Mike gives. He has the leverage to demand it. Mike does not refuse. He counter-attacks. What unfolds is a war of mutual assured destruction between two men of principle — two men devoted to their families, two men who have concluded that the institutions designed to protect life have become its greatest obstacle.</p>
+    <div class="pull-quote r d4">Beneath the civic surface of Maple Lake: a luxury real-estate project, a compromised mayor, a daughter who orchestrates more than she grieves, a body the earth is preparing to give back — and inside the Peace household, a truth Mike has not seen in fifteen years of marriage.</div>
+  </div>
+</section>
+
+<!-- THE QUESTION -->
+<section id="question">
+  <h2>The Question <span class="h2m">MORAL ARCHITECTURE</span></h2>
+  <div class="body-col">
+    <p class="r d1">Die With Peace does not advocate for the right to die. It does not condemn it. It investigates what happens when one man decides he can no longer wait for society to face the question.</p>
+    <p class="r d2">The series is built as a moral investigation — not a verdict. It asks of its audience the only honest question available: <em>would you have done what Mike did?</em></p>
+    <p class="r d3">It belongs to the dramatic tradition of Haneke's <em>Amour</em> and Eastwood's <em>Million Dollar Baby</em> — works that refused easy answers and let the audience carry the weight. In an era of unprecedented institutional distrust, this is the question the next generation will not stop asking.</p>
+  </div>
+</section>
+
+<!-- CHARACTERS -->
+<section id="characters">
+  <h2>Principal Characters <span class="h2m">SYSTEM / FUNCTIONS</span></h2>
+  <div class="char-grid">
+    <div class="char-card r d1">
+      <div class="char-role">Protagonist</div>
+      <div class="char-name">Mike Peace</div>
+      <div class="char-desc">Former senior executive at Ardwell Pharma Corp. Spent fifteen years inside an industry that taught him to weigh lives as line items. Walked away the year his own child died — in a system he could no longer separate from the one that had paid his salary. Now runs a clandestine moral protocol: three questions, applied to each request, designed to reveal whether the desire to die comes from clarity or distortion. Believes himself principled, bounded, and in control. He is wrong on all three counts.</div>
+    </div>
+    <div class="char-card r d2">
+      <div class="char-role">Antagonist / Mirror</div>
+      <div class="char-name">Andrew Walton</div>
+      <div class="char-desc">Self-made industrialist. Terminal in six months, prepared for it with the same precision he applied to building his empire. He holds ten years of evidence on Mike. Mike's mirror — a man of principle, devoted to his family, willing to operate outside the law when his values demand it. The difference: Walton has the documentation.</div>
+    </div>
+    <div class="char-card r d3">
+      <div class="char-role">The Second Protocol</div>
+      <div class="char-name">Amanda Peace</div>
+      <div class="char-desc">Funeral home director. The audience reads her as the morally watchful wife in chosen blindness. She is something else entirely. Amanda has known about her husband's work from the beginning. She has built her own silent operation — a private register, her own evaluation of the dead and the families who follow them. The show's second moral engine.</div>
+    </div>
+    <div class="char-card r d4">
+      <div class="char-role">The Unseen Hand</div>
+      <div class="char-name">Sam</div>
+      <div class="char-desc">Mid-twenties. The child Mike and Amanda never had — taken in off the street as an adolescent. Reads as earnest, slightly clumsy, transparent. The audience underestimates him entirely. This is precisely the point. Across the season, the camera teaches him a job he has already, in secret, mastered.</div>
+    </div>
+  </div>
+</section>
+
+<!-- FORMAT -->
+<section id="format">
+  <h2>Format <span class="h2m">STRUCTURE / SCALE</span></h2>
+  <div class="format-grid r">
+    <div class="format-block">
+      <div class="fb-label">Episodes</div>
+      <div class="fb-value">10 × 60 min</div>
+    </div>
+    <div class="format-block">
+      <div class="fb-label">Format</div>
+      <div class="fb-value">Premium Drama</div>
+    </div>
+    <div class="format-block">
+      <div class="fb-label">Setting</div>
+      <div class="fb-value">Maple Lake, USA</div>
+    </div>
+    <div class="format-block">
+      <div class="fb-label">Language</div>
+      <div class="fb-value">English</div>
+    </div>
+  </div>
+  <p class="r d2" style="margin-top:2rem; color:var(--muted); font-size:.95rem; max-width:620px; line-height:1.85;">A closed-ended first season designed for premium television. The narrative is structured as a slow escalation — each episode tightening the war between Mike and Walton while peeling back the town's layers one by one. The series is designed to reward close attention and punish easy assumptions.</p>
+</section>
+
+<!-- STATUS -->
+<section id="status">
+  <h2>Development Status <span class="h2m">PHASE / 2026</span></h2>
+  <div class="status-line r">
+    <div class="status-dot"></div>
+    <span class="status-text">Active Development — Working Document v10</span>
+  </div>
+  <div class="r d1">
+    <p style="color:var(--muted); font-size:.95rem; max-width:580px; line-height:1.85;">Series concept, character architecture, narrative structure and pilot episode fully developed. Working document v10. One-pager available on request.</p>
+    <p style="color:var(--muted); font-size:.95rem; max-width:580px; line-height:1.85; margin-top:1rem;">Protected — SACD 2026.</p>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <h2>Contact <span class="h2m">OPEN TO CO-DEVELOPMENT</span></h2>
+  <div class="contact-row">
+    <div class="r d1">
+      <div style="font-family:var(--mono);font-size:.54rem;letter-spacing:.1em;color:var(--dim);">Available for: Co-development · Co-production · Distribution partnerships</div>
+      <div class="contact-links">
+        <a href="https://cedricgodin.com" target="_blank">cedricgodin.com</a>
+        <a href="mailto:cedricgodin@gmail.com">cedricgodin@gmail.com</a>
+        <a href="https://linkedin.com/in/cedric-godin-23bb6933" target="_blank" rel="noopener">LinkedIn</a>
+      </div>
+    </div>
+    <div class="r d2">
+      <div class="contact-note">Working document & one-pager<br>available on request.</div>
+    </div>
+  </div>
+</section>
+
+<script>
+  const nav = document.getElementById('nav');
+  window.addEventListener('scroll', () => {
+    nav.classList.toggle('scrolled', window.scrollY > 40);
+  }, { passive:true });
+
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) { e.target.classList.add('on'); obs.unobserve(e.target); }
+    });
+  }, { threshold:0.08, rootMargin:'0px 0px -24px 0px' });
+  document.querySelectorAll('.r').forEach(el => obs.observe(el));
+</script>
+
+</body>
+</html>

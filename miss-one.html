@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Miss One — CG.STUDIO</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&family=JetBrains+Mono:wght@300;400&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:      #0b0b0b;
+  --surface: #0e0e0e;
+  --text:    #EDECEA;
+  --muted:   #B8B7B4;
+  --dim:     #787876;
+  --faint:   #383836;
+  --line:    #171717;
+  --accent:  #002FA7;
+  --mono:    'JetBrains Mono', ui-monospace, monospace;
+  --ease:    cubic-bezier(0.16,1,.3,1);
+}
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+html { scroll-behavior:smooth; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Inter', 'Helvetica Neue', sans-serif;
+  font-weight: 300;
+  line-height: 1.7;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+a { color:inherit; text-decoration:none; }
+body::before {
+  content: '';
+  position: fixed; inset: 0;
+  background-image:
+    linear-gradient(rgba(0,47,167,.02) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0,47,167,.02) 1px, transparent 1px);
+  background-size: 72px 72px;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* NAV */
+nav {
+  position: fixed; top:0; left:0; right:0;
+  padding: 18px 5vw;
+  display: flex; justify-content: space-between; align-items: center;
+  background: rgba(11,11,11,.6);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid transparent;
+  z-index: 100;
+  transition: background .4s, border-color .4s;
+}
+nav.scrolled { background: rgba(11,11,11,.95); border-color: var(--line); }
+.nav-left {
+  display: flex; align-items: center; gap: .8rem;
+  font-family: var(--mono); font-size: .58rem; letter-spacing: .12em; color: var(--dim);
+}
+.nav-sep { color: var(--faint); }
+.nav-current { color: var(--text); }
+.nav-right { display: flex; align-items: center; gap: 1.4rem; }
+.nav-back {
+  font-family: var(--mono); font-size: .58rem; letter-spacing: .12em;
+  color: var(--dim); transition: color .3s;
+}
+.nav-back:hover { color: var(--text); }
+
+/* LANG SWITCH */
+.lang-switch {
+  display: flex; align-items: center; gap: 0;
+  font-family: var(--mono); font-size: .52rem; letter-spacing: .14em;
+  border: 1px solid var(--faint); overflow: hidden;
+}
+.lang-btn {
+  padding: 4px 10px; cursor: pointer;
+  color: var(--faint); background: none; border: none;
+  font-family: var(--mono); font-size: .52rem; letter-spacing: .14em;
+  text-transform: uppercase; transition: color .3s, background .3s;
+}
+.lang-btn.active { color: var(--text); background: rgba(0,47,167,.15); }
+.lang-btn:hover { color: var(--muted); }
+
+/* HERO */
+.hero {
+  min-height: 100svh; display: flex; flex-direction: column; justify-content: flex-end;
+  padding: 120px 5vw 7rem; max-width: 1100px; margin: 0 auto;
+  position: relative; z-index: 1;
+}
+.ip-tag {
+  font-family: var(--mono); font-size: .62rem; letter-spacing: .22em;
+  text-transform: uppercase; color: var(--accent); margin-bottom: 1.8rem;
+  opacity: 0; animation: aFade 1s var(--ease) .3s forwards;
+}
+h1 {
+  font-size: clamp(3.5rem, 9vw, 7.5rem); font-weight: 300;
+  line-height: .92; letter-spacing: -.03em; margin-bottom: 2.5rem;
+  opacity: 0; animation: aRise 1.5s var(--ease) .5s forwards;
+}
+h1 em { font-style:normal; color: var(--dim); }
+.logline {
+  max-width: 580px; font-size: 1.05rem; color: var(--muted);
+  line-height: 1.85; font-style: italic;
+  opacity: 0; animation: aFade 1.2s var(--ease) .8s forwards;
+}
+.hero-meta {
+  display: flex; gap: 2.5rem; margin-top: 2.5rem;
+  opacity: 0; animation: aFade 1s var(--ease) 1s forwards;
+}
+.meta-item {
+  font-family: var(--mono); font-size: .54rem; letter-spacing: .14em;
+  text-transform: uppercase; color: var(--faint); line-height: 1.8;
+}
+.meta-item span { display: block; color: var(--dim); }
+
+@keyframes aFade { to { opacity:1; } }
+@keyframes aRise { from { opacity:0; transform:translateY(14px); } to { opacity:1; transform:none; } }
+
+/* REVEAL */
+.r { opacity:0; transform:translateY(14px); transition: opacity 1.1s var(--ease), transform 1.1s var(--ease); }
+.r.on { opacity:1; transform:none; }
+.d1 { transition-delay:.08s; } .d2 { transition-delay:.18s; }
+.d3 { transition-delay:.28s; } .d4 { transition-delay:.38s; }
+
+/* SECTIONS */
+section {
+  padding: 6rem 5vw; max-width: 1100px; margin: 0 auto;
+  border-top: 1px solid var(--line); position: relative; z-index: 1;
+}
+h2 {
+  font-family: var(--mono); font-size: .64rem; letter-spacing: .2em;
+  text-transform: uppercase; color: var(--dim); margin-bottom: 2.5rem;
+  display: flex; justify-content: space-between; align-items: center;
+}
+.h2m { font-size: .5rem; letter-spacing: .1em; color: var(--faint); }
+
+.body-col p { max-width: 660px; color: var(--muted); font-size: 1rem; line-height: 1.9; }
+.body-col p + p { margin-top: 1rem; }
+.pull-quote {
+  margin-top: 2rem; border-left: 2px solid var(--accent); padding-left: 1.2rem;
+  color: var(--text); max-width: 580px; font-size: 1rem; line-height: 1.8; font-style: italic;
+}
+
+/* CHARACTERS */
+.char-grid { display: grid; grid-template-columns: repeat(3,1fr); gap:1px; background: var(--line); }
+.char-card { background: var(--bg); padding: 2rem 1.8rem; transition: background .35s; }
+.char-card:hover { background: var(--surface); }
+.char-role {
+  font-family: var(--mono); font-size: .5rem; letter-spacing: .18em;
+  text-transform: uppercase; color: var(--accent); opacity: .65; margin-bottom: .5rem;
+}
+.char-name { font-size: .95rem; font-weight: 400; margin-bottom: .7rem; }
+.char-desc { font-size: .85rem; color: var(--dim); line-height: 1.65; }
+
+/* FORMAT */
+.format-grid { display: grid; grid-template-columns: repeat(4,1fr); gap:1px; background: var(--line); }
+.format-block { background: var(--surface); padding: 1.8rem 1.6rem; }
+.fb-label {
+  font-family: var(--mono); font-size: .5rem; letter-spacing: .16em;
+  text-transform: uppercase; color: var(--faint); margin-bottom: .6rem;
+}
+.fb-value { font-size: .95rem; color: var(--text); }
+
+/* MARKET */
+.market-row { display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; }
+.market-col p { color: var(--muted); font-size: .95rem; line-height: 1.85; max-width: 480px; }
+.market-col p + p { margin-top: 1rem; }
+.comp-list { margin-top: 1.5rem; display: flex; flex-direction: column; gap: .5rem; }
+.comp-item {
+  font-family: var(--mono); font-size: .56rem; letter-spacing: .1em;
+  color: var(--dim); padding-left: .8rem; border-left: 1px solid var(--faint);
+}
+
+/* STATUS */
+.status-line { display: flex; align-items: center; gap: .8rem; margin-bottom: 1.5rem; }
+.status-dot {
+  width:6px; height:6px; border-radius:50%; background: var(--accent);
+  animation: pulse 2.5s ease-in-out infinite;
+}
+@keyframes pulse { 0%,100%{opacity:.3} 50%{opacity:1} }
+.status-text {
+  font-family: var(--mono); font-size: .58rem; letter-spacing: .16em;
+  text-transform: uppercase; color: var(--dim);
+}
+
+/* CONTACT */
+.contact-row { display:flex; justify-content:space-between; align-items:flex-end; flex-wrap:wrap; gap:2rem; }
+.contact-links { display:flex; flex-direction:column; gap:.6rem; margin-top:1rem; }
+.contact-links a {
+  color: var(--muted); font-size: 1rem; transition: color .35s;
+  position: relative; display: inline-block; padding-bottom: 2px;
+}
+.contact-links a::after {
+  content:''; position:absolute; bottom:0; left:0;
+  width:0; height:1px; background: var(--accent); transition: width .45s var(--ease);
+}
+.contact-links a:hover { color: var(--text); }
+.contact-links a:hover::after { width:100%; }
+.contact-note {
+  font-family: var(--mono); font-size: .54rem; letter-spacing: .1em;
+  color: var(--faint); text-align: right; line-height: 2;
+}
+
+/* RESPONSIVE */
+@media (max-width:860px) {
+  .char-grid { grid-template-columns: 1fr; }
+  .format-grid { grid-template-columns: 1fr 1fr; }
+  .market-row { grid-template-columns: 1fr; gap: 2.5rem; }
+  .contact-row { flex-direction:column; align-items:flex-start; }
+  .contact-note { text-align:left; }
+  .nav-left span:not(.nav-current) { display:none; }
+}
+@media (max-width:600px) {
+  .hero-meta { flex-direction:column; gap:1rem; }
+  .format-grid { grid-template-columns: 1fr 1fr; }
+}
+</style>
+</head>
+<body>
+
+<nav id="nav">
+  <div class="nav-left">
+    <a href="index.html">CG.STUDIO</a>
+    <span class="nav-sep">/</span>
+    <span class="nav-sep" data-i18n="nav.slate">IP Slate</span>
+    <span class="nav-sep">/</span>
+    <span class="nav-current">Miss One</span>
+  </div>
+  <div class="nav-right">
+    <div class="lang-switch">
+      <button class="lang-btn active" onclick="setLang('en')">EN</button>
+      <button class="lang-btn" onclick="setLang('fr')">FR</button>
+    </div>
+    <a href="index.html#ip" class="nav-back" data-i18n="nav.back">← Back</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="ip-tag" data-i18n="hero.tag">Animation Series · Original IP · DOC.001</div>
+  <h1>Miss <em>One</em></h1>
+  <p class="logline" data-i18n="hero.logline">"Two twin sisters — total opposites — share one extraordinary secret: when they merge, they become Miss One, a superhero protecting children everywhere from the hidden dangers of the digital world."</p>
+  <div class="hero-meta">
+    <div class="meta-item"><span data-i18n="meta.format.label">Format</span><span data-i18n="meta.format.value">Animation Series</span></div>
+    <div class="meta-item"><span data-i18n="meta.episodes.label">Episodes</span><span>26 × 22 min</span></div>
+    <div class="meta-item"><span data-i18n="meta.target.label">Target</span><span data-i18n="meta.target.value">Ages 6–12</span></div>
+    <div class="meta-item"><span data-i18n="meta.status.label">Status</span><span data-i18n="meta.status.value">In Development</span></div>
+  </div>
+</div>
+
+<!-- CONCEPT -->
+<section id="concept">
+  <h2><span data-i18n="concept.title">Concept</span> <span class="h2m" data-i18n="concept.sub">PREMISE / ENGINE</span></h2>
+  <div class="body-col">
+    <p class="r d1" data-i18n="concept.p1">Zoe and Lucy are 10-year-old twin sisters who couldn't be more different. Zoe is pure energy — generous, athletic, endlessly clumsy. Lucy lives in her own world, quietly brilliant, always connected. Together, they are a perfect team. Apart, they are two ordinary children in a quiet London neighbourhood.</p>
+    <p class="r d2" data-i18n="concept.p2">When a child somewhere in the world is in danger online, Lucy detects the alert on her screens — and something extraordinary happens. The two sisters merge to become Miss One: faster than light, powered by empathy, equipped with digital abilities that no single person could possess alone.</p>
+    <p class="r d3" data-i18n="concept.p3">Their enemy is Buggy-Wat — a former protection software abandoned by its creator, now a corrupted virus drifting through global networks. He doesn't destroy for pleasure. He destroys because he was left behind. This is the tension that drives the series across seasons: a villain who suffers, and a hero who might one day choose to save him instead of defeat him.</p>
+    <div class="pull-quote r d4" data-i18n="concept.pull">"Miss One is not a series about dangers. It's a series about connection — and what becomes possible when two very different people choose to become one."</div>
+  </div>
+</section>
+
+<!-- CHARACTERS -->
+<section id="characters">
+  <h2><span data-i18n="chars.title">Key Characters</span> <span class="h2m" data-i18n="chars.sub">SYSTEM / FUNCTIONS</span></h2>
+  <div class="char-grid">
+    <div class="char-card r d1">
+      <div class="char-role" data-i18n="c1.role">Protagonist</div>
+      <div class="char-name">Miss One</div>
+      <div class="char-desc" data-i18n="c1.desc">The fusion of Zoe and Lucy. More than the sum of her parts — faster, sharper, more powerful. Both personalities coexist in her, creating humour, wisdom and the occasional internal argument at exactly the wrong moment.</div>
+    </div>
+    <div class="char-card r d2">
+      <div class="char-role" data-i18n="c2.role">The Energy</div>
+      <div class="char-name">Zoe</div>
+      <div class="char-desc" data-i18n="c2.desc">Athletic, generous, hopelessly clumsy. She charges forward before thinking — which means she always needs someone to catch her, and always manages to land on her feet. Her companion: Dimmy.</div>
+    </div>
+    <div class="char-card r d3">
+      <div class="char-role" data-i18n="c3.role">The Brain</div>
+      <div class="char-name">Lucy</div>
+      <div class="char-desc" data-i18n="c3.desc">Introverted, analytical, deeply connected to the digital world. She notices what others miss and feels distress signals before they become visible. Her companion: Pix — a pixel genius who lives in her iPad.</div>
+    </div>
+    <div class="char-card r d1">
+      <div class="char-role" data-i18n="c4.role">London Base</div>
+      <div class="char-name">Sue</div>
+      <div class="char-desc" data-i18n="c4.desc">The only person who knows the secret. No superpowers — just sharp intelligence, total loyalty, and a chronic inability to sleep. She keeps the London base running while Miss One is on the other side of the world.</div>
+    </div>
+    <div class="char-card r d2">
+      <div class="char-role" data-i18n="c5.role">Antagonist</div>
+      <div class="char-name">Buggy-Wat</div>
+      <div class="char-desc" data-i18n="c5.desc">A former protection programme turned malware after its creator disappeared. He doesn't hate children — he envies them. His arc, slowly revealed across seasons, transforms the villain into a tragedy the audience will not see coming.</div>
+    </div>
+    <div class="char-card r d3">
+      <div class="char-role" data-i18n="c6.role">Threat System</div>
+      <div class="char-name">Les Watties</div>
+      <div class="char-desc" data-i18n="c6.desc">Buggy-Wat's army — bugs that have taken physical form, each born from a different type of malware. Their number grows with every device infected. A ticking clock across the whole season.</div>
+    </div>
+  </div>
+</section>
+
+<!-- FORMAT -->
+<section id="format">
+  <h2><span data-i18n="format.title">Format</span> <span class="h2m" data-i18n="format.sub">STRUCTURE / SCALE</span></h2>
+  <div class="format-grid r">
+    <div class="format-block">
+      <div class="fb-label" data-i18n="format.eps.label">Episodes</div>
+      <div class="fb-value">26 × 22 min</div>
+    </div>
+    <div class="format-block">
+      <div class="fb-label" data-i18n="format.fmt.label">Format</div>
+      <div class="fb-value" data-i18n="format.fmt.value">TV + Streaming</div>
+    </div>
+    <div class="format-block">
+      <div class="fb-label" data-i18n="format.set.label">Setting</div>
+      <div class="fb-value">London + World</div>
+    </div>
+    <div class="format-block">
+      <div class="fb-label" data-i18n="format.lang.label">Language</div>
+      <div class="fb-value" data-i18n="format.lang.value">English / French</div>
+    </div>
+  </div>
+  <p class="r d2" style="margin-top:2rem;color:var(--muted);font-size:.95rem;max-width:620px;line-height:1.85;" data-i18n="format.body">Each episode follows the same structure — the ordinary life of two London sisters, an alert from somewhere in the world, the fusion, the mission. The format is designed for long-form development: the world grows, the army expands, and Buggy-Wat's story deepens across seasons without resolution of the core engine.</p>
+</section>
+
+<!-- MARKET -->
+<section id="market">
+  <h2><span data-i18n="market.title">Market</span> <span class="h2m" data-i18n="market.sub">POSITIONING / OPPORTUNITY</span></h2>
+  <div class="market-row">
+    <div class="market-col">
+      <p class="r d1" data-i18n="market.p1">Miss One enters the international animation market with a clear positioning gap: no major franchise has claimed the digital world — the space children actually inhabit — as its primary terrain. The series is designed for the global market from day one, with a London setting, and themes that cross every cultural boundary.</p>
+      <p class="r d2" data-i18n="market.p2">The educational dimension opens a second strategic avenue: institutional partnerships with ministries of education, digital safety organisations, and parental protection platforms — in France, the UK, the US, and beyond.</p>
+    </div>
+    <div class="market-col r d2">
+      <div style="font-family:var(--mono);font-size:.56rem;letter-spacing:.14em;text-transform:uppercase;color:var(--dim);margin-bottom:1rem;" data-i18n="market.comp.title">Comparable Titles</div>
+      <div class="comp-list">
+        <div class="comp-item" data-i18n="market.comp1">Miraculous Ladybug — dual identity, international reach, franchise model</div>
+        <div class="comp-item" data-i18n="market.comp2">Bluey — local anchor, global audience, family double-read</div>
+        <div class="comp-item" data-i18n="market.comp3">Hilda — ordinary life into extraordinary adventure</div>
+      </div>
+      <div style="font-family:var(--mono);font-size:.56rem;letter-spacing:.14em;text-transform:uppercase;color:var(--dim);margin-top:2rem;margin-bottom:1rem;" data-i18n="market.plat.title">Target Platforms</div>
+      <div class="comp-list">
+        <div class="comp-item">Netflix Kids · Disney+ · Apple TV+</div>
+        <div class="comp-item" data-i18n="market.plat2">Cartoon Network · BBC Children's · TF1 · France Télévisions</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- STATUS -->
+<section id="status">
+  <h2><span data-i18n="status.title">Development Status</span> <span class="h2m">PHASE / 2026</span></h2>
+  <div class="status-line r">
+    <div class="status-dot"></div>
+    <span class="status-text" data-i18n="status.label">Active Development — Concept & Bible Phase</span>
+  </div>
+  <div class="r d1">
+    <p style="color:var(--muted);font-size:.95rem;max-width:580px;line-height:1.85;" data-i18n="status.p1">Concept architecture complete. Logline, character system, narrative engine, format, market positioning and commercial strategy are fully defined. Pitch & Treatment available in English and French. Visual development in progress.</p>
+    <p style="color:var(--muted);font-size:.95rem;max-width:580px;line-height:1.85;margin-top:1rem;" data-i18n="status.p2">Protected — SACD 2022 / 2026.</p>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <h2><span data-i18n="contact.title">Contact</span> <span class="h2m" data-i18n="contact.sub">OPEN TO CO-DEVELOPMENT</span></h2>
+  <div class="contact-row">
+    <div class="r d1">
+      <div style="font-family:var(--mono);font-size:.54rem;letter-spacing:.1em;color:var(--dim);" data-i18n="contact.avail">Available for: Co-development · Co-production · Licensing · Distribution partnerships</div>
+      <div class="contact-links">
+        <a href="https://cedricgodin.com" target="_blank">cedricgodin.com</a>
+        <a href="mailto:cedricgodin@gmail.com">cedricgodin@gmail.com</a>
+        <a href="https://linkedin.com/in/cedric-godin-23bb6933" target="_blank" rel="noopener">LinkedIn</a>
+      </div>
+    </div>
+    <div class="r d2">
+      <div class="contact-note" data-i18n="contact.note">Pitch & Treatment available<br>on request — EN / FR.</div>
+    </div>
+  </div>
+</section>
+
+<script>
+const T = {
+  en: {
+    'nav.slate':        'IP Slate',
+    'nav.back':         '← Back',
+    'hero.tag':         'Animation Series · Original IP · DOC.001',
+    'hero.logline':     '"Two twin sisters — total opposites — share one extraordinary secret: when they merge, they become Miss One, a superhero protecting children everywhere from the hidden dangers of the digital world."',
+    'meta.format.label':'Format',
+    'meta.format.value':'Animation Series',
+    'meta.episodes.label':'Episodes',
+    'meta.target.label':'Target',
+    'meta.target.value':'Ages 6–12',
+    'meta.status.label':'Status',
+    'meta.status.value':'In Development',
+    'concept.title':    'Concept',
+    'concept.sub':      'PREMISE / ENGINE',
+    'concept.p1':       'Zoe and Lucy are 10-year-old twin sisters who couldn\'t be more different. Zoe is pure energy — generous, athletic, endlessly clumsy. Lucy lives in her own world, quietly brilliant, always connected. Together, they are a perfect team. Apart, they are two ordinary children in a quiet London neighbourhood.',
+    'concept.p2':       'When a child somewhere in the world is in danger online, Lucy detects the alert on her screens — and something extraordinary happens. The two sisters merge to become Miss One: faster than light, powered by empathy, equipped with digital abilities that no single person could possess alone.',
+    'concept.p3':       'Their enemy is Buggy-Wat — a former protection software abandoned by its creator, now a corrupted virus drifting through global networks. He doesn\'t destroy for pleasure. He destroys because he was left behind. This is the tension that drives the series across seasons: a villain who suffers, and a hero who might one day choose to save him instead of defeat him.',
+    'concept.pull':     '"Miss One is not a series about dangers. It\'s a series about connection — and what becomes possible when two very different people choose to become one."',
+    'chars.title':      'Key Characters',
+    'chars.sub':        'SYSTEM / FUNCTIONS',
+    'c1.role':'Protagonist',    'c1.desc':'The fusion of Zoe and Lucy. More than the sum of her parts — faster, sharper, more powerful. Both personalities coexist in her, creating humour, wisdom and the occasional internal argument at exactly the wrong moment.',
+    'c2.role':'The Energy',     'c2.desc':'Athletic, generous, hopelessly clumsy. She charges forward before thinking — which means she always needs someone to catch her, and always manages to land on her feet. Her companion: Dimmy.',
+    'c3.role':'The Brain',      'c3.desc':'Introverted, analytical, deeply connected to the digital world. She notices what others miss and feels distress signals before they become visible. Her companion: Pix — a pixel genius who lives in her iPad.',
+    'c4.role':'London Base',    'c4.desc':'The only person who knows the secret. No superpowers — just sharp intelligence, total loyalty, and a chronic inability to sleep. She keeps the London base running while Miss One is on the other side of the world.',
+    'c5.role':'Antagonist',     'c5.desc':'A former protection programme turned malware after its creator disappeared. He doesn\'t hate children — he envies them. His arc, slowly revealed across seasons, transforms the villain into a tragedy the audience will not see coming.',
+    'c6.role':'Threat System',  'c6.desc':'Buggy-Wat\'s army — bugs that have taken physical form, each born from a different type of malware. Their number grows with every device infected. A ticking clock across the whole season.',
+    'format.title':     'Format',
+    'format.sub':       'STRUCTURE / SCALE',
+    'format.eps.label': 'Episodes',
+    'format.fmt.label': 'Format',   'format.fmt.value': 'TV + Streaming',
+    'format.set.label': 'Setting',
+    'format.lang.label':'Language', 'format.lang.value':'English / French',
+    'format.body':      'Each episode follows the same structure — the ordinary life of two London sisters, an alert from somewhere in the world, the fusion, the mission. The format is designed for long-form development: the world grows, the army expands, and Buggy-Wat\'s story deepens across seasons without resolution of the core engine.',
+    'market.title':     'Market',
+    'market.sub':       'POSITIONING / OPPORTUNITY',
+    'market.p1':        'Miss One enters the international animation market with a clear positioning gap: no major franchise has claimed the digital world — the space children actually inhabit — as its primary terrain. The series is designed for the global market from day one, with a London setting, and themes that cross every cultural boundary.',
+    'market.p2':        'The educational dimension opens a second strategic avenue: institutional partnerships with ministries of education, digital safety organisations, and parental protection platforms — in France, the UK, the US, and beyond.',
+    'market.comp.title':'Comparable Titles',
+    'market.comp1':     'Miraculous Ladybug — dual identity, international reach, franchise model',
+    'market.comp2':     'Bluey — local anchor, global audience, family double-read',
+    'market.comp3':     'Hilda — ordinary life into extraordinary adventure',
+    'market.plat.title':'Target Platforms',
+    'market.plat2':     'Cartoon Network · BBC Children\'s · TF1 · France Télévisions',
+    'status.title':     'Development Status',
+    'status.label':     'Active Development — Concept & Bible Phase',
+    'status.p1':        'Concept architecture complete. Logline, character system, narrative engine, format, market positioning and commercial strategy are fully defined. Pitch & Treatment available in English and French. Visual development in progress.',
+    'status.p2':        'Protected — SACD 2022 / 2026.',
+    'contact.title':    'Contact',
+    'contact.sub':      'OPEN TO CO-DEVELOPMENT',
+    'contact.avail':    'Available for: Co-development · Co-production · Licensing · Distribution partnerships',
+    'contact.note':     'Pitch & Treatment available<br>on request — EN / FR.',
+  },
+  fr: {
+    'nav.slate':        'Slate IP',
+    'nav.back':         '← Retour',
+    'hero.tag':         'Série d\'Animation · IP Original · DOC.001',
+    'hero.logline':     '« Deux sœurs jumelles que tout oppose partagent un secret extraordinaire : quand elles fusionnent, elles deviennent Miss One — une superhéroïne qui protège les enfants du monde entier des dangers cachés derrière leurs écrans. »',
+    'meta.format.label':'Format',
+    'meta.format.value':'Série d\'Animation',
+    'meta.episodes.label':'Épisodes',
+    'meta.target.label':'Public',
+    'meta.target.value':'6–12 ans',
+    'meta.status.label':'Statut',
+    'meta.status.value':'En Développement',
+    'concept.title':    'Concept',
+    'concept.sub':      'PRÉMISSE / MOTEUR',
+    'concept.p1':       'Zoe et Lucy sont deux sœurs jumelles de 10 ans que tout oppose. Zoe déborde d\'une énergie incontrôlable — généreuse, sportive, terriblement maladroite. Lucy vit dans son monde intérieur, génie discret du numérique, toujours connectée. Ensemble, elles forment une équipe parfaite. Séparées, ce sont deux enfants ordinaires dans un beau quartier de Londres.',
+    'concept.p2':       'Quand un enfant quelque part dans le monde est en danger sur internet, Lucy détecte l\'alerte sur ses écrans — et quelque chose d\'extraordinaire se produit. Les deux sœurs fusionnent pour devenir Miss One : plus rapide que la lumière, portée par l\'empathie, dotée de capacités digitales qu\'aucune d\'elles ne pourrait posséder seule.',
+    'concept.p3':       'Leur ennemi est Buggy-Wat — un ancien logiciel de protection abandonné par son créateur, devenu virus corrompu errant dans les réseaux mondiaux. Il ne détruit pas par plaisir. Il détruit parce qu\'il a été abandonné. C\'est cette tension qui anime la série sur plusieurs saisons : un villain qui souffre, et une héroïne qui pourrait un jour choisir de le sauver plutôt que de le vaincre.',
+    'concept.pull':     '« Miss One n\'est pas une série sur les dangers. C\'est une série sur le lien — et ce qui devient possible quand deux personnes très différentes choisissent de ne faire qu\'une. »',
+    'chars.title':      'Personnages',
+    'chars.sub':        'SYSTÈME / FONCTIONS',
+    'c1.role':'Protagoniste',   'c1.desc':'La fusion de Zoe et Lucy. Ensemble, elles deviennent bien plus que deux petites filles réunies — elles deviennent une superhéroïne. Les deux personnalités coexistent en elle, créant humour, sagesse et l\'occasion d\'un désaccord interne au pire moment possible.',
+    'c2.role':'L\'Énergie',     'c2.desc':'Sportive, généreuse, irrémédiablement maladroite. Elle fonce avant de réfléchir — ce qui signifie qu\'elle a toujours besoin de quelqu\'un pour la rattraper, et qu\'elle retombe toujours sur ses pieds. Son compagnon : Dimmy.',
+    'c3.role':'Le Cerveau',     'c3.desc':'Introvertie, analytique, profondément connectée au monde numérique. Elle remarque ce que les autres ne voient pas et ressent les signaux de détresse avant qu\'ils deviennent visibles. Son compagnon : Pix — génie pixel qui vit dans son iPad.',
+    'c4.role':'Base Londres',   'c4.desc':'La seule personne qui connaît le secret. Pas de superpouvoirs — juste une intelligence vive, une loyauté totale et une incapacité chronique à dormir. Elle tient la base londonienne pendant que Miss One est à l\'autre bout du monde.',
+    'c5.role':'Antagoniste',    'c5.desc':'Un ancien programme de protection devenu malware après la disparition de son créateur. Il ne déteste pas les enfants — il les envie. Son arc, révélé progressivement, transforme le villain en tragédie que le public n\'aura pas vu venir.',
+    'c6.role':'Système de Menace','c6.desc':'L\'armée de Buggy-Wat — des bugs ayant pris forme physique, chacun né d\'un type de malware différent. Leur nombre grandit à chaque appareil infecté. Une horloge qui tourne sur toute la saison.',
+    'format.title':     'Format',
+    'format.sub':       'STRUCTURE / ÉCHELLE',
+    'format.eps.label': 'Épisodes',
+    'format.fmt.label': 'Format',   'format.fmt.value': 'TV + Streaming',
+    'format.set.label': 'Cadre',
+    'format.lang.label':'Langue',   'format.lang.value':'Français / Anglais',
+    'format.body':      'Chaque épisode suit la même structure — la vie ordinaire de deux sœurs londoniennes, une alerte quelque part dans le monde, la fusion, la mission. Le format est conçu pour le développement en long format : le monde grandit, l\'armée s\'élargit, et l\'histoire de Buggy-Wat s\'approfondit au fil des saisons sans résoudre le moteur central.',
+    'market.title':     'Marché',
+    'market.sub':       'POSITIONNEMENT / OPPORTUNITÉ',
+    'market.p1':        'Miss One entre sur le marché international de l\'animation avec un espace blanc clairement identifié : aucune grande franchise n\'a revendiqué le monde numérique — l\'espace que les enfants habitent vraiment — comme terrain principal. La série est conçue pour le marché mondial dès sa conception, avec un ancrage londonien et des thèmes qui traversent toutes les frontières culturelles.',
+    'market.p2':        'La dimension éducative ouvre une deuxième voie stratégique : des partenariats institutionnels avec des ministères de l\'éducation, des organisations de sécurité numérique et des plateformes de protection parentale — en France, au Royaume-Uni, aux États-Unis et au-delà.',
+    'market.comp.title':'Références',
+    'market.comp1':     'Miraculous Ladybug — double identité, portée internationale, modèle franchise',
+    'market.comp2':     'Bluey — ancrage local, audience mondiale, double lecture famille',
+    'market.comp3':     'Hilda — vie ordinaire basculant dans l\'extraordinaire',
+    'market.plat.title':'Plateformes Cibles',
+    'market.plat2':     'Cartoon Network · BBC Children\'s · TF1 · France Télévisions',
+    'status.title':     'Statut de Développement',
+    'status.label':     'Développement Actif — Phase Concept & Bible',
+    'status.p1':        'Architecture conceptuelle complète. Logline, système de personnages, moteur narratif, format, positionnement marché et stratégie commerciale entièrement définis. Pitch & Treatment disponibles en anglais et en français. Développement visuel en cours.',
+    'status.p2':        'Protégé — SACD 2022 / 2026.',
+    'contact.title':    'Contact',
+    'contact.sub':      'OUVERT À LA CO-PRODUCTION',
+    'contact.avail':    'Disponible pour : Co-développement · Co-production · Licensing · Partenariats de distribution',
+    'contact.note':     'Pitch & Treatment disponibles<br>sur demande — FR / EN.',
+  }
+};
+
+let currentLang = localStorage.getItem('lang') || 'en';
+
+function setLang(lang) {
+  currentLang = lang;
+  localStorage.setItem('lang', lang);
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const key = el.getAttribute('data-i18n');
+    if (T[lang][key] !== undefined) el.innerHTML = T[lang][key];
+  });
+  document.querySelectorAll('.lang-btn').forEach(btn => {
+    btn.classList.toggle('active', btn.textContent === lang.toUpperCase());
+  });
+  document.documentElement.lang = lang;
+}
+
+// Init
+setLang(currentLang);
+
+// Nav scroll
+const nav = document.getElementById('nav');
+window.addEventListener('scroll', () => {
+  nav.classList.toggle('scrolled', window.scrollY > 40);
+}, { passive:true });
+
+// Reveal
+const obs = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) { e.target.classList.add('on'); obs.unobserve(e.target); }
+  });
+}, { threshold:0.08, rootMargin:'0px 0px -24px 0px' });
+document.querySelectorAll('.r').forEach(el => obs.observe(el));
+</script>
+
+</body>
+</html>

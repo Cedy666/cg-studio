@@ -34,7 +34,6 @@ body {
 }
 a { color:inherit; text-decoration:none; }
 
-/* substrate */
 body::before {
   content: '';
   position: fixed;
@@ -87,6 +86,12 @@ nav.scrolled {
 }
 .logo:hover { color: var(--text); }
 
+.nav-right {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
 .links {
   display: flex;
   gap: 20px;
@@ -123,6 +128,31 @@ nav.scrolled {
   border-color: rgba(0,47,167,.4);
 }
 .link-ip::after { display:none !important; }
+
+/* LANG SWITCH */
+.lang-switch {
+  display: flex;
+  align-items: center;
+  font-family: var(--mono);
+  font-size: .52rem;
+  letter-spacing: .14em;
+  border: 1px solid var(--faint);
+  overflow: hidden;
+}
+.lang-btn {
+  padding: 4px 10px;
+  cursor: pointer;
+  color: var(--faint);
+  background: none;
+  border: none;
+  font-family: var(--mono);
+  font-size: .52rem;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  transition: color .3s, background .3s;
+}
+.lang-btn.active { color: var(--text); background: rgba(0,47,167,.15); }
+.lang-btn:hover { color: var(--muted); }
 
 /* ── HERO ──────────────────────────────────────────── */
 .hero {
@@ -427,59 +457,61 @@ h2 {
 <!-- NAV -->
 <nav id="nav">
   <a href="#" class="logo">CG.STUDIO</a>
-  <div class="links">
-    <a href="#about">About</a>
-    <a href="#ip">IP Slate</a>
-    <a href="#work">Works</a>
-    <a href="ip.html" class="link-ip">IP Dev</a>
-    <a href="#contact">Contact</a>
+  <div class="nav-right">
+    <div class="links">
+      <a href="#about" data-i18n="nav.about">About</a>
+      <a href="#ip" data-i18n="nav.ip">IP Slate</a>
+      <a href="#work" data-i18n="nav.works">Works</a>
+      <a href="#contact" data-i18n="nav.contact">Contact</a>
+    </div>
+    <div class="lang-switch">
+      <button class="lang-btn active" onclick="setLang('en')">EN</button>
+      <button class="lang-btn" onclick="setLang('fr')">FR</button>
+    </div>
   </div>
 </nav>
 
 <!-- HERO -->
 <div class="hero">
-  <div class="kicker">Narrative Studio</div>
-  <h1>Creator <em>—</em> Producer &amp; Director<br>developing original IPs for television, animation and film</h1>
-  <p class="sub">Independent studio focused on long-form storytelling and international co-productions.</p>
-  <p style="font-family:var(--mono);font-size:.58rem;letter-spacing:.14em;color:var(--dim);margin-top:1.1rem;opacity:0;animation:aFade 1.2s var(--ease) .95s forwards;">Feature · Documentary · Series development</p>
+  <div class="kicker" data-i18n="hero.kicker">Narrative Studio</div>
+  <h1 data-i18n="hero.h1">Creator <em>—</em> Producer &amp; Director<br>developing original IPs for television, animation and film</h1>
+  <p class="sub" data-i18n="hero.sub">Independent studio focused on long-form storytelling and international co-productions.</p>
+  <p style="font-family:var(--mono);font-size:.58rem;letter-spacing:.14em;color:var(--dim);margin-top:1.1rem;opacity:0;animation:aFade 1.2s var(--ease) .95s forwards;" data-i18n="hero.tags">Feature · Documentary · Series development</p>
   <div class="hero-foot">
     <div class="scroll-cue">
       <div class="scroll-line"></div>
-      <span class="scroll-lbl">Scroll</span>
+      <span class="scroll-lbl" data-i18n="hero.scroll">Scroll</span>
     </div>
-    <div class="hero-stats">
-      IPs IN DEVELOPMENT — 02<br>
-      BROADCAST CREDITS — 06+
-    </div>
+    <div class="hero-stats" data-i18n="hero.stats">IPs IN DEVELOPMENT — 02<br>BROADCAST CREDITS — 06+</div>
   </div>
 </div>
 
 <!-- ABOUT -->
 <section id="about">
-  <h2>About <span class="h2m">DOC.PROFILE / v2.1</span></h2>
+  <h2><span data-i18n="about.title">About</span> <span class="h2m">DOC.PROFILE / v2.1</span></h2>
   <div class="about-grid">
     <div>
       <img src="cedric.JPG" alt="Cédric Godin" class="about-photo" />
     </div>
     <div class="about">
-      <p class="r d1">Cédric Godin is a filmmaker, director and creative producer working across international broadcast production and original IP development.</p>
-      <p class="r d2">His career began in live performance and touring productions before expanding into technical direction and audiovisual coordination for international broadcasters and media organisations including Sky News, ARTE, TV5, Bloomberg, NBC Universal, the EBU, Roland Garros and Eurovision.</p>
-      <p class="r d3">Alongside broadcast work, he develops and directs original documentaries and fiction projects exploring personal narratives, cultural movements and psychological themes. His work includes X Art, Who Is Taki and the award-winning feature PTSD.</p>
-      <p class="r d4">Today, his primary focus is the development of original intellectual properties for television, animation and film, building narrative worlds designed for international audiences and long-form storytelling.</p>
-      <div class="highlight r" style="transition-delay:.48s;">Alongside broadcast work, he develops original film, television and animation projects focused on scalable narrative worlds and international audiences.</div>
+      <p class="r d1" data-i18n="about.p1">Cédric Godin is a filmmaker, director and creative producer working across international broadcast production and original IP development.</p>
+      <p class="r d2" data-i18n="about.p2">His career began in live performance and touring productions before expanding into technical direction and audiovisual coordination for international broadcasters and media organisations including Sky News, ARTE, TV5, Bloomberg, NBC Universal, the EBU, Roland Garros and Eurovision.</p>
+      <p class="r d3" data-i18n="about.p3">Alongside broadcast work, he develops and directs original documentaries and fiction projects exploring personal narratives, cultural movements and psychological themes. His work includes X Art, Who Is Taki and the award-winning feature PTSD.</p>
+      <p class="r d4" data-i18n="about.p4">Today, his primary focus is the development of original intellectual properties for television, animation and film, building narrative worlds designed for international audiences and long-form storytelling.</p>
+      <div class="highlight r" style="transition-delay:.48s;" data-i18n="about.highlight">Alongside broadcast work, he develops original film, television and animation projects focused on scalable narrative worlds and international audiences.</div>
     </div>
   </div>
 </section>
 
 <!-- IP SLATE -->
 <section id="ip">
-  <h2>IP Slate <span class="h2m">PIPELINE / 2 ACTIVE</span></h2>
-  <p style="font-family:var(--mono);font-size:.54rem;letter-spacing:.1em;color:var(--dim);margin-bottom:2rem;opacity:.6;">Current development slate — internal projects, early-stage</p>
+  <h2><span data-i18n="ip.title">IP Slate</span> <span class="h2m">PIPELINE / 2 ACTIVE</span></h2>
+  <p style="font-family:var(--mono);font-size:.54rem;letter-spacing:.1em;color:var(--dim);margin-bottom:2rem;opacity:.6;" data-i18n="ip.intro">Current development slate — internal projects, early-stage</p>
   <div class="slate">
     <div class="ip r d1">
-      <div class="ip-tag">Animation Series · Ages 6–12 · International</div>
+      <div class="ip-tag" data-i18n="ip1.tag">Animation Series · Ages 6–12 · International</div>
       <h3>Miss One</h3>
-      <p>Two twin sisters who fuse to become Miss One — a superhero protecting children from the hidden dangers of the digital world. Built for international markets.</p>
+      <p data-i18n="ip1.desc">Two twin sisters who fuse to become Miss One — a superhero protecting children from the hidden dangers of the digital world. Built for international markets.</p>
       <div class="ip-meta">
         <span>STAGE: DEVELOPMENT · e-dpo 000616668</span>
         <span class="ip-arrow">→</span>
@@ -499,49 +531,49 @@ h2 {
 
 <!-- WORKS -->
 <section id="work">
-  <h2>Selected Works <span class="h2m">PRODUCED / 2018–2024</span></h2>
+  <h2><span data-i18n="works.title">Selected Works</span> <span class="h2m">PRODUCED / 2018–2024</span></h2>
   <div class="grid">
     <div class="card r d1">
       <div class="card-idx">WRK.001</div>
       <h3>PTSD</h3>
-      <div class="c-type">Feature Film · 71 min · 2015</div>
-      <p>Writer / Director / Producer<br>Hexogen Pictures LLC — USA</p>
+      <div class="c-type" data-i18n="w1.type">Feature Film · 71 min · 2015</div>
+      <p data-i18n="w1.credits">Writer / Director / Producer<br>Hexogen Pictures LLC — USA</p>
       <div class="card-awards">
         <span>★ Best Film — Chelsea Film Festival, New York</span>
         <span>★ Best Actor — Chelsea Film Festival, New York</span>
       </div>
-      <a href="https://youtu.be/LNjom-8E7hY" target="_blank" rel="noopener" class="card-link">Watch Trailer →</a>
+      <a href="https://youtu.be/LNjom-8E7hY" target="_blank" rel="noopener" class="card-link" data-i18n="w.trailer">Watch Trailer →</a>
     </div>
     <div class="card r d2">
       <div class="card-idx">WRK.002</div>
       <h3>X Art</h3>
-      <div class="c-type">Documentary · 71 min · 2020</div>
-      <p>Director / Producer<br>19 artists — French, British &amp; New York scenes</p>
+      <div class="c-type" data-i18n="w2.type">Documentary · 71 min · 2020</div>
+      <p data-i18n="w2.credits">Director / Producer<br>19 artists — French, British &amp; New York scenes</p>
       <div class="card-awards">
         <span>★ Best Editing — Filmmaker Festival, Amsterdam</span>
         <span>★ Best Documentary — Grenoble Street-Art Film Festival</span>
       </div>
-      <a href="https://youtu.be/MmwznUrBlcs" target="_blank" rel="noopener" class="card-link">Watch Trailer →</a>
+      <a href="https://youtu.be/MmwznUrBlcs" target="_blank" rel="noopener" class="card-link" data-i18n="w.trailer">Watch Trailer →</a>
     </div>
     <div class="card r d3">
       <div class="card-idx">WRK.003</div>
       <h3>Who Is Taki</h3>
-      <div class="c-type">Documentary · 20 min · 2020</div>
-      <p>Director / Producer<br>With Taki 183, Blek Le Rat &amp; Cornbread</p>
+      <div class="c-type" data-i18n="w3.type">Documentary · 20 min · 2020</div>
+      <p data-i18n="w3.credits">Director / Producer<br>With Taki 183, Blek Le Rat &amp; Cornbread</p>
       <div class="card-awards">
-        <span>World Premiere — First Amendment Gallery, San Francisco</span>
+        <span data-i18n="w3.premiere">World Premiere — First Amendment Gallery, San Francisco</span>
       </div>
-      <a href="https://youtu.be/vpgdgQVJknU" target="_blank" rel="noopener" class="card-link">Watch Film →</a>
+      <a href="https://youtu.be/vpgdgQVJknU" target="_blank" rel="noopener" class="card-link" data-i18n="w.film">Watch Film →</a>
     </div>
   </div>
 </section>
 
 <!-- CONTACT -->
 <section id="contact">
-  <h2>Contact <span class="h2m">OPEN TO COLLABORATIONS</span></h2>
+  <h2><span data-i18n="contact.title">Contact</span> <span class="h2m" data-i18n="contact.sub">OPEN TO COLLABORATIONS</span></h2>
   <div class="contact">
     <div class="r d1">
-      <div style="font-family:var(--mono);font-size:.54rem;letter-spacing:.1em;color:var(--dim);">Available for: IP development · Co-production · Series &amp; Feature collaboration</div>
+      <div style="font-family:var(--mono);font-size:.54rem;letter-spacing:.1em;color:var(--dim);" data-i18n="contact.avail">Available for: IP development · Co-production · Series &amp; Feature collaboration</div>
       <div class="contact-links">
         <a href="mailto:cedricgodin@gmail.com">cedricgodin@gmail.com</a>
         <a href="https://linkedin.com/in/cedric-godin-23bb6933" target="_blank" rel="noopener">LinkedIn</a>
@@ -549,24 +581,116 @@ h2 {
       </div>
     </div>
     <div class="r d2">
-      <div class="contact-note">Available for co-development, co-production<br>and original IP partnerships.</div>
+      <div class="contact-note" data-i18n="contact.note">Available for co-development, co-production<br>and original IP partnerships.</div>
       <div class="contact-copy">© 2026 CG.STUDIO</div>
     </div>
   </div>
 </section>
 
 <script>
-  const nav = document.getElementById('nav');
-  window.addEventListener('scroll', () => {
-    nav.classList.toggle('scrolled', window.scrollY > 40);
-  }, { passive:true });
+const T = {
+  en: {
+    'nav.about':   'About',
+    'nav.ip':      'IP Slate',
+    'nav.works':   'Works',
+    'nav.contact': 'Contact',
+    'hero.kicker': 'Narrative Studio',
+    'hero.h1':     'Creator <em>—</em> Producer &amp; Director<br>developing original IPs for television, animation and film',
+    'hero.sub':    'Independent studio focused on long-form storytelling and international co-productions.',
+    'hero.tags':   'Feature · Documentary · Series development',
+    'hero.scroll': 'Scroll',
+    'hero.stats':  'IPs IN DEVELOPMENT — 02<br>BROADCAST CREDITS — 06+',
+    'about.title': 'About',
+    'about.p1':    'Cédric Godin is a filmmaker, director and creative producer working across international broadcast production and original IP development.',
+    'about.p2':    'His career began in live performance and touring productions before expanding into technical direction and audiovisual coordination for international broadcasters and media organisations including Sky News, ARTE, TV5, Bloomberg, NBC Universal, the EBU, Roland Garros and Eurovision.',
+    'about.p3':    'Alongside broadcast work, he develops and directs original documentaries and fiction projects exploring personal narratives, cultural movements and psychological themes. His work includes X Art, Who Is Taki and the award-winning feature PTSD.',
+    'about.p4':    'Today, his primary focus is the development of original intellectual properties for television, animation and film, building narrative worlds designed for international audiences and long-form storytelling.',
+    'about.highlight': 'Alongside broadcast work, he develops original film, television and animation projects focused on scalable narrative worlds and international audiences.',
+    'ip.title':    'IP Slate',
+    'ip.intro':    'Current development slate — internal projects, early-stage',
+    'ip1.tag':     'Animation Series · Ages 6–12 · International',
+    'ip1.desc':    'Two twin sisters who fuse to become Miss One — a superhero protecting children from the hidden dangers of the digital world. Built for international markets.',
+    'works.title': 'Selected Works',
+    'w1.type':     'Feature Film · 71 min · 2015',
+    'w1.credits':  'Writer / Director / Producer<br>Hexogen Pictures LLC — USA',
+    'w2.type':     'Documentary · 71 min · 2020',
+    'w2.credits':  'Director / Producer<br>19 artists — French, British &amp; New York scenes',
+    'w3.type':     'Documentary · 20 min · 2020',
+    'w3.credits':  'Director / Producer<br>With Taki 183, Blek Le Rat &amp; Cornbread',
+    'w3.premiere': 'World Premiere — First Amendment Gallery, San Francisco',
+    'w.trailer':   'Watch Trailer →',
+    'w.film':      'Watch Film →',
+    'contact.title':'Contact',
+    'contact.sub': 'OPEN TO COLLABORATIONS',
+    'contact.avail':'Available for: IP development · Co-production · Series &amp; Feature collaboration',
+    'contact.note':'Available for co-development, co-production<br>and original IP partnerships.',
+  },
+  fr: {
+    'nav.about':   'À propos',
+    'nav.ip':      'Slate IP',
+    'nav.works':   'Œuvres',
+    'nav.contact': 'Contact',
+    'hero.kicker': 'Studio Narratif',
+    'hero.h1':     'Créateur <em>—</em> Producteur &amp; Réalisateur<br>développant des IPs originaux pour la télévision, l\'animation et le cinéma',
+    'hero.sub':    'Studio indépendant spécialisé dans la narration en long format et les coproductions internationales.',
+    'hero.tags':   'Long métrage · Documentaire · Développement de séries',
+    'hero.scroll': 'Défiler',
+    'hero.stats':  'IPs EN DÉVELOPPEMENT — 02<br>CRÉDITS BROADCAST — 06+',
+    'about.title': 'À propos',
+    'about.p1':    'Cédric Godin est cinéaste, réalisateur et producteur créatif, actif dans la production broadcast internationale et le développement d\'IPs originaux.',
+    'about.p2':    'Sa carrière débute dans le spectacle vivant et les productions en tournée, avant de s\'étendre à la direction technique et à la coordination audiovisuelle pour des diffuseurs et organisations médias internationaux : Sky News, ARTE, TV5, Bloomberg, NBC Universal, l\'UER, Roland Garros et l\'Eurovision.',
+    'about.p3':    'En parallèle du travail broadcast, il développe et réalise des documentaires et projets de fiction originaux explorant des récits personnels, des mouvements culturels et des thèmes psychologiques. Son travail comprend X Art, Who Is Taki et le long métrage primé PTSD.',
+    'about.p4':    'Aujourd\'hui, son activité principale est le développement de propriétés intellectuelles originales pour la télévision, l\'animation et le cinéma — des univers narratifs conçus pour des audiences internationales et la narration en long format.',
+    'about.highlight': 'En parallèle du broadcast, il développe des projets de cinéma, télévision et animation originaux centrés sur des univers narratifs évolutifs et des audiences internationales.',
+    'ip.title':    'Slate IP',
+    'ip.intro':    'Slate de développement actuel — projets internes, phase initiale',
+    'ip1.tag':     'Série d\'Animation · 6–12 ans · International',
+    'ip1.desc':    'Deux sœurs jumelles que tout oppose fusionnent pour devenir Miss One — une superhéroïne qui protège les enfants des dangers cachés du monde numérique. Conçue pour les marchés internationaux.',
+    'works.title': 'Œuvres Sélectionnées',
+    'w1.type':     'Long Métrage · 71 min · 2015',
+    'w1.credits':  'Scénariste / Réalisateur / Producteur<br>Hexogen Pictures LLC — USA',
+    'w2.type':     'Documentaire · 71 min · 2020',
+    'w2.credits':  'Réalisateur / Producteur<br>19 artistes — scènes française, britannique &amp; new-yorkaise',
+    'w3.type':     'Documentaire · 20 min · 2020',
+    'w3.credits':  'Réalisateur / Producteur<br>Avec Taki 183, Blek Le Rat &amp; Cornbread',
+    'w3.premiere': 'Première mondiale — First Amendment Gallery, San Francisco',
+    'w.trailer':   'Voir la bande-annonce →',
+    'w.film':      'Voir le film →',
+    'contact.title':'Contact',
+    'contact.sub': 'OUVERT AUX COLLABORATIONS',
+    'contact.avail':'Disponible pour : développement IP · Coproduction · Collaboration séries &amp; cinéma',
+    'contact.note':'Disponible pour le co-développement, la coproduction<br>et les partenariats IP.',
+  }
+};
 
-  const obs = new IntersectionObserver(entries => {
-    entries.forEach(e => {
-      if (e.isIntersecting) { e.target.classList.add('on'); obs.unobserve(e.target); }
-    });
-  }, { threshold:0.08, rootMargin:'0px 0px -24px 0px' });
-  document.querySelectorAll('.r').forEach(el => obs.observe(el));
+let currentLang = localStorage.getItem('lang') || 'en';
+
+function setLang(lang) {
+  currentLang = lang;
+  localStorage.setItem('lang', lang);
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const key = el.getAttribute('data-i18n');
+    if (T[lang][key] !== undefined) el.innerHTML = T[lang][key];
+  });
+  document.querySelectorAll('.lang-btn').forEach(btn => {
+    btn.classList.toggle('active', btn.textContent === lang.toUpperCase());
+  });
+  document.documentElement.lang = lang;
+}
+
+setLang(currentLang);
+
+const nav = document.getElementById('nav');
+window.addEventListener('scroll', () => {
+  nav.classList.toggle('scrolled', window.scrollY > 40);
+}, { passive:true });
+
+const obs = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) { e.target.classList.add('on'); obs.unobserve(e.target); }
+  });
+}, { threshold:0.08, rootMargin:'0px 0px -24px 0px' });
+document.querySelectorAll('.r').forEach(el => obs.observe(el));
 </script>
 
 </body>

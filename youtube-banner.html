@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { background: #000; display:flex; justify-content:center; align-items:center; min-height:100vh; }
+
+  /* YouTube channel art: 2560x1440 total, safe zone 1546x423 centered */
+  .banner {
+    width: 2560px;
+    height: 1440px;
+    background: #0b0b0b;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  }
+
+  /* Subtle grid */
+  .banner::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(0,47,167,.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,47,167,.04) 1px, transparent 1px);
+    background-size: 120px 120px;
+  }
+
+  /* Safe zone indicator (remove before export) */
+  .safe-zone {
+    position: absolute;
+    width: 1546px;
+    height: 423px;
+    /* border: 1px dashed rgba(255,255,255,.1); */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 28px;
+    z-index: 2;
+  }
+
+  .studio-name {
+    font-size: 88px;
+    font-weight: 300;
+    letter-spacing: .18em;
+    color: #EDECEA;
+    text-transform: uppercase;
+  }
+
+  .studio-name span {
+    color: #002FA7;
+  }
+
+  .divider {
+    width: 60px;
+    height: 1px;
+    background: #002FA7;
+  }
+
+  .tagline {
+    font-size: 22px;
+    font-weight: 300;
+    letter-spacing: .3em;
+    text-transform: uppercase;
+    color: #5a5a5a;
+  }
+
+  /* Klein blue accent bar — left edge */
+  .accent-left {
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 4px;
+    background: #002FA7;
+  }
+
+  /* Faint corner markers */
+  .corner {
+    position: absolute;
+    width: 40px;
+    height: 40px;
+    border-color: #1c1c1c;
+    border-style: solid;
+  }
+  .corner.tl { top:60px; left:80px; border-width:1px 0 0 1px; }
+  .corner.tr { top:60px; right:80px; border-width:1px 1px 0 0; }
+  .corner.bl { bottom:60px; left:80px; border-width:0 0 1px 1px; }
+  .corner.br { bottom:60px; right:80px; border-width:0 1px 1px 0; }
+
+  /* System text */
+  .sys-left {
+    position: absolute;
+    bottom: 80px;
+    left: 80px;
+    font-family: 'Courier New', monospace;
+    font-size: 18px;
+    letter-spacing: .12em;
+    color: #1e1e1e;
+    text-transform: uppercase;
+  }
+  .sys-right {
+    position: absolute;
+    bottom: 80px;
+    right: 80px;
+    font-family: 'Courier New', monospace;
+    font-size: 18px;
+    letter-spacing: .12em;
+    color: #1e1e1e;
+    text-transform: uppercase;
+    text-align: right;
+  }
+</style>
+</head>
+<body>
+<div class="banner">
+  <div class="accent-left"></div>
+  <div class="corner tl"></div>
+  <div class="corner tr"></div>
+  <div class="corner bl"></div>
+  <div class="corner br"></div>
+
+  <div class="safe-zone">
+    <div class="studio-name">CG<span>.</span>STUDIO</div>
+    <div class="divider"></div>
+    <div class="tagline">Narrative IP Development</div>
+  </div>
+
+  <div class="sys-left">Film · Television · Animation</div>
+  <div class="sys-right">Original IP Development</div>
+</div>
+</body>
+</html>

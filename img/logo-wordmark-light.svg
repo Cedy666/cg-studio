@@ -1,0 +1,13 @@
+<svg viewBox="0 0 900 460" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300&amp;family=JetBrains+Mono:wght@300&amp;display=swap');
+      .wm  { font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif; font-weight: 300; }
+      .tag { font-family: 'JetBrains Mono', 'Courier New', monospace; font-weight: 300; }
+    </style>
+  </defs>
+  <rect width="900" height="460" fill="#0b0b0b"/>
+  <text x="450" y="245" text-anchor="middle" class="wm" font-size="80" letter-spacing="4" fill="#EDECEA">CG<tspan fill="#002FA7">.</tspan>STUDIO</text>
+  <line x1="410" y1="285" x2="490" y2="285" stroke="#002FA7" stroke-width="1"/>
+  <text x="450" y="320" text-anchor="middle" class="tag" font-size="16" letter-spacing="6" fill="#787876">NARRATIVE IP DEVELOPMENT</text>
+</svg>

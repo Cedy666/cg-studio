@@ -321,6 +321,15 @@ h2 {
   overflow: hidden;
   transition: background .4s var(--ease);
 }
+.ip-art {
+  width: 100%;
+  aspect-ratio: 16/9;
+  object-fit: cover;
+  object-position: center 15%;
+  filter: grayscale(15%);
+  margin-bottom: 1.5rem;
+  display: block;
+}
 .ip::before {
   content: '';
   position: absolute;
@@ -523,6 +532,7 @@ h2 {
   <p style="font-family:var(--mono);font-size:.54rem;letter-spacing:.1em;color:var(--dim);margin-bottom:2rem;opacity:.6;" data-i18n="ip.intro">Current development slate — internal projects, early-stage</p>
   <div class="slate">
     <div class="ip r d1">
+      <img src="img/miss-one-keyart.jpg" alt="Miss One — key art, London" class="ip-art" />
       <div class="ip-tag" data-i18n="ip1.tag">Animation Series · Ages 6–12 · International</div>
       <h3>Miss One</h3>
       <p data-i18n="ip1.desc">Two twin sisters who fuse to become Miss One — a superhero protecting children from the hidden dangers of the digital world. Built for international markets.</p>
